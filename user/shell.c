@@ -33,12 +33,19 @@ int main() {
         }
 
 		if (fork_result == 0) {
-            // Child process
+            char *argv[10];
+            int argc = 0;
 
-            // Build argv array for execve:
-            char *argv[2];
-            argv[0] = command;
-            argv[1] = NULL;
+            char *p = command;
+            argv[argc++] = p;
+
+            for (; *p; p++) {
+                if (*p == ' ') {
+                    *p = '\0';  // terminate current argument
+                    argv[argc++] = p + 1;  // next argument starts here
+                }
+            }
+            argv[argc] = NULL;  // argv must be NULL-terminated
 
             execve(command, argv, NULL);
 

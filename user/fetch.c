@@ -14,8 +14,11 @@ int main() {
     }
     struct sysinfo info;
     if (sysinfo(&info) == 0) {
-        printf("Total RAM: %.2f MB\n", info.totalram / 1024.0 / 1024.0);
-        printf("Free RAM:  %.2f MB\n", info.freeram / 1024.0 / 1024.0);
+        unsigned long usedRam = info.totalram - info.freeram;
+        printf("RAM: %.2f/%.2f MB\n", usedRam / 1024.0 / 1024.0,  info.totalram / 1024.0 / 1024.0);
+        unsigned long usedSwap = info.totalswap - info.freeswap;
+        printf("Swap:  %.2f/%.2f MB\n", usedSwap / 1024.0 / 1024.0, info.totalswap / 1024.0 / 1024.0);
+        printf("Uptime: %ld min, %ld s\n", info.uptime/60, info.uptime%60);
     }
     return 0;
 }
