@@ -1,1 +1,1 @@
-qemu-system-i386 -cdrom pixix.iso -m 64M -cpu 486
+qemu-system-i386 -cdrom pixix.iso -m 20M -cpu 486

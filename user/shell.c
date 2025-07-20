@@ -1,20 +1,15 @@
 #include <unistd.h>
 #include <sys/wait.h>
+#include "sys.h"
 
-#define STDIN 0
-#define STDOUT 1
 #define COMMAND_MAX_LENGTH 256
 
-int main() {
+int main() {    
 	// Set hostname
-    if (sethostname("pixix", 5) != 0) {
-        write(STDOUT,"Failed to set hostname!\n", 24);
-    }
-
 	char command[COMMAND_MAX_LENGTH];
 	for (;;) {
-		write(STDOUT, "# ", 2);
-		int count = read(STDIN, command, COMMAND_MAX_LENGTH);
+		sys_write(STDOUT, "# ", 2);
+		int count = sys_read(STDIN, command, COMMAND_MAX_LENGTH);
 
 		if (count <= 0) {
             break;
@@ -27,7 +22,7 @@ int main() {
             command[count] = 0;
         }
 
-		pid_t fork_result = fork();
+		pid_t fork_result = sys_fork();
         if (fork_result < 0) {
             break;
         }
@@ -47,16 +42,16 @@ int main() {
             }
             argv[argc] = NULL;  // argv must be NULL-terminated
 
-            execve(command, argv, NULL);
+            sys_execve(command, argv, NULL);
 
             // If execve returns, it failed
-            write(STDOUT, "FAILURE\n", 8);
+            sys_write(STDOUT, "FAILURE\n", 8);
            	break;
 		} else {
 			// Wait for child to finish
 			siginfo_t info;
-			waitid(P_ALL, 0, &info, WEXITED);
+			sys_waitid(P_ALL, 0, &info, WEXITED);
 		}		
 	}
-	_exit(0);
+	sys_exit(0);
 }
