@@ -1,9 +1,9 @@
-NO_GNU_TOOLS="true"
-TARGET_ARCH="i486"
+GNU_TOOLS="true"
+TARGET_ARCH="i386"
 
 # Create initramfs
 echo "Making initramfs..."
-#rm -r initramfs
+rm -r initramfs
 mkdir -p initramfs
 mkdir -p initramfs/bin
 
@@ -11,29 +11,30 @@ mkdir -p initramfs/bin
 echo "Building userland..."
 cd user
 ./build.sh
-cp ./shell ../initramfs/init
-cp ./pitch ../initramfs/pitch
-cp ./prep ../initramfs/prep
-cp ./reboot ../initramfs/reboot
-cp ./shutdown ../initramfs/shutdown
-cp ./ls ../initramfs/ls
+cp ./shell.i386 ../initramfs/init
+cp ./pitch.i386 ../initramfs/pitch
+cp ./prep.i386 ../initramfs/prep
+cp ./reboot.i386 ../initramfs/reboot
+cp ./shutdown.i386 ../initramfs/shutdown
+#cp ./ls.i386 ../initramfs/ls
 cd ..
 
 echo "ALL_GNU_TOOLS is set to: '$ALL_GNU_TOOLS'"
-if [ "$NO_GNU_TOOLS" = "false" ]; then
+if [ "$GNU_TOOLS" = "true" ]; then
 # Build bash
-echo "Building bash..."
-cd bash-5.3
-CFLAGS="-m32 -static" \
-LDFLAGS="-m32 -static" \
-./configure --prefix=/usr/local/bash-i386-static \
-            --without-bash-malloc \
-            --disable-nls \
-            --enable-static-link
-make clean
-make CFLAGS="-m32 -static" LDFLAGS="-m32 -static"
-cp bash ../initramfs/bash
-cd ..
+#echo "Building bash..."
+#cd bash-5.3
+#CFLAGS="-m32 -static" \
+#LDFLAGS="-m32 -static" \
+#./configure --prefix=/usr/local/bash-i386-static \
+#            --without-bash-malloc \
+#            --disable-nls \
+#            --enable-static-link
+#make clean
+#make CFLAGS="-m32 -static" LDFLAGS="-m32 -static"
+#cp bash ../initramfs/bash
+#cd ..
+#
 
 # Build coreutils
 echo "Building coreutils..."
@@ -46,7 +47,9 @@ LDFLAGS="-m32 -static" \
             --enable-static-link
 make clean
 make CFLAGS="-m32 -static" LDFLAGS="-m32 -static"
-find ./src -type f -executable -exec cp {} ../initramfs/bin/ \;
+#find ./src -type f -executable -exec cp {} ../initramfs/bin/ \;
+cp ./src/ls  ../initramfs/bin
+cp ./src/cat ../initramfs/bin
 cd ..
 fi
 

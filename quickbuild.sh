@@ -1,4 +1,4 @@
-TARGET_ARCH="i486"
+TARGET_ARCH="i386"
 
 mkdir initramfs
 
@@ -6,12 +6,12 @@ mkdir initramfs
 echo "Building userland..."
 cd user
 ./build.sh
-cp ./shell ../initramfs/init
-cp ./pitch ../initramfs/pitch
-#cp ./prep ../initramfs/prep
-#cp ./reboot ../initramfs/reboot
-#cp ./shutdown ../initramfs/shutdown
-cp ./ls ../initramfs/ls
+cp ./shell.i386 ../initramfs/init
+cp ./pitch.i386 ../initramfs/pitch
+cp ./prep.i386 ../initramfs/prep
+#cp ./reboot.i386 ../initramfs/reboot
+#cp ./shutdown.i386 ../initramfs/shutdown
+#cp ./ls.i386 ../initramfs/ls
 cd ..
 
 # Make into init.cpio
