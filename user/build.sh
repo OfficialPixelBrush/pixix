@@ -13,3 +13,6 @@ strip pitch.i386
 gcc -m32 -static -march=i486 --data-sections -fomit-frame-pointer -fno-pic -fno-stack-protector -nostdlib -c ping.c
 ld -m elf_i386 -static -o ping.i386 asm/crt.lib asm/sys.lib asm/net.lib ping.o --entry=_start -z noexecstack
 strip ping.i386
+
+as --32 -march=i486 chroot.s -o chroot.o
+ld -m elf_i386 chroot.o -o chroot.i386

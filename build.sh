@@ -38,7 +38,7 @@ cd ..
 echo "Setting up grub..."
 cd grub
 cd build
-../configure --target=i386 --prefix=/usr/local
+../configure --target=i386 --prefix=/bin
 make -j$(nproc)
 cp grub-install ../../diskfs/
 cp grub-mkconfig ../../diskfs/
