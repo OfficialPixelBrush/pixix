@@ -59,10 +59,10 @@ int main() {
                 }
             }
             sys_write(STDOUT,"] ",2);
-            printint((info.totalram-info.freeram)/1024);
+            printfix((info.totalram-info.freeram)/1024,1000,2);
             sys_write(STDOUT," / ",3);
-            printint(info.totalram/1024);
-            sys_write(STDOUT," KiB",4);
+            printfix(info.totalram/1024,1000,2);
+            sys_write(STDOUT," MiB",4);
         }
         
         if (info.totalswap) {
@@ -76,10 +76,10 @@ int main() {
                 }
             }
             sys_write(STDOUT,"] ",2);
-            printint((info.totalswap-info.freeswap)/1024);
+            printfix((info.totalswap-info.freeswap)/1024,1000,2);
             sys_write(STDOUT," / ",3);
-            printint(info.totalswap/1024);
-            sys_write(STDOUT," KiB",4);
+            printfix(info.totalswap/1024,1000,2);
+            sys_write(STDOUT," MiB",4);
         }
         
         if (info.uptime) {

@@ -1,6 +1,6 @@
-GNU_TOOLS=false
-NANO=true
-BUSYBOX=true
+GET_GNU_TOOLS=false
+GET_NANO=false
+GET_BUSYBOX=true
 
 ARCHIVE_BASH=bash-5.3.tar.gz
 ARCHIVE_COREUTILS=coreutils-9.7.tar.gz
@@ -14,12 +14,16 @@ apt install isolinux flex bison bc genisoimage libc6-dev-i386
 echo "Cloning latest kernel..."
 git clone --depth=1 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-if [ "$NANO" = true ]; then
+# Copy config to kernel
+echo "Copying kernel config..."
+cp kernelconfig linux/.config
+
+if [ "$GET_NANO" = true ]; then
     echo "Cloning nano..."
     git clone --depth=1 https://git.savannah.gnu.org/git/nano.git
 fi
 
-if [ "$GNU_TOOLS" = true ]; then
+if [ "$GET_GNU_TOOLS" = true ]; then
     if [ ! -e "$ARCHIVE_BASH"] ; then
         echo "Cloning bash..."
         wget https://ftp.gnu.org/gnu/bash/$ARCHIVE_BASH
@@ -32,7 +36,7 @@ if [ "$GNU_TOOLS" = true ]; then
     fi
 fi
 
-if [ "$BUSYBOX" = true ]; then
+if [ "$GET_BUSYBOX" = true ]; then
     echo "Cloning Busybox..."
     git clone --depth=1 https://github.com/mirror/busybox
     #if [ ! -e "$ARCHIVE_BUSYBOX" ]; then
@@ -40,8 +44,6 @@ if [ "$BUSYBOX" = true ]; then
     #    wget https://busybox.net/downloads/$ARCHIVE_BUSYBOX
     #    tar -xf $ARCHIVE_BUSYBOX
     #fi
+    echo "Copying busybox config..."
+    cp busyboxconfig busybox/.config
 fi
-
-# Copy config to kernel
-echo "Copying kernel config..."
-cp kernelconfig linux/.config

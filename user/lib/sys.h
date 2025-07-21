@@ -75,6 +75,7 @@ int sys_write(int fd, const void *buf, size_t count);
 int sys_open(const void *buf, int flags, int mode);
 int sys_close(int fd);
 int sys_execve(const char *filename, char *const argv[], char *const envp[]);
+int sys_mknod(const char *filename, int mode, unsigned int dev);
 int sys_getpid();
 int sys_mount(const char *source, const char *target, const char *filesystemtype, unsigned long mountflags, const void *data);
 int sys_mkdir(const char *name, int mode);

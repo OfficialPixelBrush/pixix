@@ -31,6 +31,46 @@ void printint(int number) {
     }
 }
 
+void printfix(int number, int scaler, int digitsAfterDecimal) {
+    if (number < 0) {
+        sys_write(STDOUT,"-",1);
+        number=-number;
+    }
+    if (number == 0) {
+        sys_write(STDOUT,"0",1);
+    }
+    int digitsSinceDecimal = -1;
+    int divisor = MAX_NUMBER_CHARACTER;
+    int foundNonZero = 0;
+    while(divisor > 0) {
+        // Get the whole number
+        int result = number / divisor;
+        // If the divisor and scaler match up, print a period
+        if (divisor*10 == scaler) {
+            sys_write(STDOUT,".",1);
+            digitsSinceDecimal = 0;
+        }
+        // Count how many decimal numbers we have left
+        if (digitsSinceDecimal >= 0) {
+            digitsSinceDecimal++;
+        }
+        // If we're done, we're done
+        if (digitsSinceDecimal > digitsAfterDecimal) {
+            break;
+        }
+        // Search for the leading 0
+        if (result != 0 && digitsSinceDecimal == 0) {
+            foundNonZero = 1;
+        }
+        if (foundNonZero) {
+            char resChar = '0'+result;
+            sys_write(STDOUT,&resChar,1);
+        }
+        number = number % divisor;
+        divisor /= 10;
+    }
+}
+
 int strlen(const char* p) {
     int length = 0;
     for (; *p; p++) {

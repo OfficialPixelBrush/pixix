@@ -28,9 +28,16 @@ cd ..
 
 echo "Setting up symlinks..."
 cd initramfs
-ln -s ./bin/busybox ./ifconfig
-ln -s ./bin/busybox ./udhcpc
-ln -s ./bin/busybox ./route
+#ln -s ./bin/busybox ./ifconfig
+#ln -s ./bin/busybox ./udhcpc
+#ln -s ./bin/busybox ./route
+ln -s ./bin/busybox ./ls
+ln -s ./bin/busybox ./find
+ln -s ./bin/busybox ./cat
+ln -s ./bin/busybox ./blkid
+ln -s ./bin/busybox ./mount
+ln -s ./bin/busybox ./umount
+#ln -s ./bin/busybox ./fdisk
 cd ..
 
 # Make into init.cpio

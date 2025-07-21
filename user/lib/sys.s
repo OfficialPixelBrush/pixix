@@ -7,6 +7,7 @@
 .global sys_open
 .global sys_close
 .global sys_execve
+.global sys_mknod
 .global sys_getpid
 .global sys_mount
 .global sys_mkdir
@@ -63,6 +64,14 @@ sys_execve:
     mov edx, [esp + 12]
     mov esi, [esp + 16]
     mov eax, 11
+    int 0x80
+    ret
+
+sys_mknod:
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov edx, [esp + 12]
+    mov eax, 14
     int 0x80
     ret
 
