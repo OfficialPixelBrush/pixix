@@ -12,3 +12,6 @@ pixix.iso
 *.i386
 /nano
 /busybox
+/diskfs
+*.qcow2
+/grub

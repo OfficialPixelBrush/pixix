@@ -70,18 +70,4 @@ int sys_connect(int fd, struct sockaddr_in *uservaddr, int addrlen);
 int sys_setsockopt(int sockfd, int level, int optname, const void *optval, int optlen);
 int sys_sendto(int fd, const void *buf, size_t len, int flags, const struct sockaddr *addr, int addrlen);
 int sys_recvfrom(int fd, void *buf, size_t size, int flags, struct sockaddr *addr, int *addrlen);
-
-/*
-int inet_addr(const char* ip) {
-    int section = 0;
-    char ipFragments[4];
-    
-    for (; *ip; ip++) {
-        if (ip = '.') {
-            section++;
-            continue;
-        }
-    }
-}
-    */
 #endif

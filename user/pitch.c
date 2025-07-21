@@ -1,5 +1,6 @@
 #include "lib/sys.h"
-#include "lib/lib.h"
+#include "lib/num.h"
+#include "lib/str.h"
 
 #define __NEW_UTS_LEN 64
 
@@ -31,10 +32,10 @@ struct sysinfo {
 
 int main() {
     struct utsname uts;
-    sys_write(STDOUT,&newline,1);
+    sys_write(STDOUT,"\n",1);
     if(sys_uname(&uts) == 0) {
         sys_write(STDOUT,uts.nodename,65);
-        sys_write(STDOUT,&newline,1);
+        sys_write(STDOUT,"\n",1);
         for (int i = 0; i < strlen(uts.nodename); i++) {
             sys_write(STDOUT,"-",1);
         }
@@ -59,10 +60,10 @@ int main() {
                 }
             }
             sys_write(STDOUT,"] ",2);
-            printfix((info.totalram-info.freeram)/1024,1000,2);
+            printint((info.totalram-info.freeram)/1024);
             sys_write(STDOUT," / ",3);
-            printfix(info.totalram/1024,1000,2);
-            sys_write(STDOUT," MiB",4);
+            printint(info.totalram/1024);
+            sys_write(STDOUT," KiB",4);
         }
         
         if (info.totalswap) {
@@ -76,10 +77,10 @@ int main() {
                 }
             }
             sys_write(STDOUT,"] ",2);
-            printfix((info.totalswap-info.freeswap)/1024,1000,2);
+            printint((info.totalswap-info.freeswap)/1024);
             sys_write(STDOUT," / ",3);
-            printfix(info.totalswap/1024,1000,2);
-            sys_write(STDOUT," MiB",4);
+            printint(info.totalswap/1024);
+            sys_write(STDOUT," KiB",4);
         }
         
         if (info.uptime) {
@@ -92,6 +93,6 @@ int main() {
             sys_write(STDOUT,"s",1);
         }
     }
-    sys_write(STDOUT,&newline,1);
+    sys_write(STDOUT,"\n",1);
     sys_exit(0);
 }

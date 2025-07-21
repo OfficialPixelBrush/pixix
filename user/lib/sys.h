@@ -68,6 +68,8 @@ struct linux_dirent64 {
     char            d_name[];
 };
 
+#define TIOCSPGRP 0x5410
+
 int sys_exit(int status);
 int sys_fork();
 int sys_read(int fd, void *buf, size_t count);
@@ -79,6 +81,9 @@ int sys_mknod(const char *filename, int mode, unsigned int dev);
 int sys_getpid();
 int sys_mount(const char *source, const char *target, const char *filesystemtype, unsigned long mountflags, const void *data);
 int sys_mkdir(const char *name, int mode);
+int sys_ioctl(int fd, int request, const void *argp);
+int sys_setpgid(pid_t pid, pid_t pgid);
+int sys_setsid();
 int sys_sysinfo(void *info);
 int sys_uname(void *buf);
 int sys_getdents64(int fd, char* buf, int nbytes);

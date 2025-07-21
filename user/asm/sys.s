@@ -11,7 +11,9 @@
 .global sys_getpid
 .global sys_mount
 .global sys_mkdir
-.global sys_sethostname
+.global sys_ioctl
+.global sys_setpgid
+.global sys_setsid
 .global sys_sysinfo
 .global sys_uname
 .global sys_getdents64
@@ -97,10 +99,23 @@ sys_mkdir:
     int 0x80
     ret
 
-sys_sethostname:
+sys_ioctl:
     mov ebx, [esp + 4]
     mov ecx, [esp + 8]
-    mov eax, 74
+    mov edx, [esp + 12]
+    mov eax, 54
+    int 0x80
+    ret
+
+sys_setpgid:
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov eax, 57
+    int 0x80
+    ret
+
+sys_setsid:
+    mov eax, 66
     int 0x80
     ret
 

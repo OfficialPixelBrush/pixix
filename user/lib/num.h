@@ -1,12 +1,10 @@
-// Helper libarary with convenient functions
+// Helper libarary for numbers
 #include "sys.h"
 
-#ifndef LIB_H
-#define LIB_H
-
 #define MAX_NUMBER_CHARACTER 100000000
-char newline = '\n';
 
+#ifndef NUM_H
+#define NUM_H
 void printint(int number) {
     if (number < 0) {
         sys_write(STDOUT,"-",1);
@@ -71,53 +69,35 @@ void printfix(int number, int scaler, int digitsAfterDecimal) {
     }
 }
 
-int strlen(const char* p) {
-    int length = 0;
-    for (; *p; p++) {
-        if (*p == '\0') {
-            return length;
+void printhex(int number) {
+    // 2345859625
+    //   8BD2FA29
+    for (int i = sizeof(int)*2-1; i >= 0; i--) {
+        char out = '0';
+        char offset = ((number >> i*4) & 0xF) & 0xFF;
+        if (offset > '9'-'0') {
+            offset += 7;
         }
-        length++;
+        out += offset;
+        sys_write(STDOUT,&out,1);
     }
-    return length;
 }
 
-void errprint(int number) {
-    if (number == 0) { return; }
-    printint(number);
-    sys_write(STDOUT, ": ", 2);
-    switch(number) {
-        case -1:
-            sys_write(STDOUT, "Operation not permitted",23);
-            break;
-        case -2:
-            sys_write(STDOUT, "No such file or directory",25);
-            break;
-        case -3:
-            sys_write(STDOUT, "No such process",15);
-            break;
-        case -4:
-            sys_write(STDOUT, "Interrupted system call",23);
-            break;
-        case -5:
-            sys_write(STDOUT, "Input/output error",18);
-            break;
-        case -14:
-            sys_write(STDOUT, "Bad address",11);
-            break;
-        case -19:
-            sys_write(STDOUT, "No such device",14);
-            break;
-        case -22:
-            sys_write(STDOUT, "Invalid argument",16);
-            break;
-        case -101:
-            sys_write(STDOUT, "Network is unreachable",22);
-            break;
+int readnum(const char *p) {
+    int result = 0;
+    const char *end = p;
+    while (*end) end++;
+    end--;
+    for (const char* q = p; q <= end; ++q) {
+        result = result << 4;
+        char c = *q;
+        if (c >= '0' && c <= '9') {
+            result |= (c - '0');
+        } else if (c >= 'A' && c <= 'F') {
+            result |= (c - 'A' + 10);
+        }
     }
-    sys_write(STDOUT,&newline,1);
-    if (number < 0) {
-        sys_exit(1);
-    }
+    return result;
 }
+
 #endif
