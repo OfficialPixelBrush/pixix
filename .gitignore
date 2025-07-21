@@ -10,3 +10,5 @@ pixix.iso
 *.o
 *.lib
 *.i386
+/nano
+/busybox

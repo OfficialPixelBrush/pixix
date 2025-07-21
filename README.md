@@ -19,3 +19,12 @@ If you'd like to run the commands separately, just execute the following in what
 - `./build.sh` is for compiling everything into a usable .iso file
 
 All of this was tested on Linux Mint 22.1, so modify `setup.sh` for whatever distro you may be running.
+
+### Getting online
+```bash
+ifconfig eth0 up
+udhcpc -i eth0
+ifconfig eth0 10.0.2.15 netmask 255.255.255.0 up
+prep
+route add default gw 10.0.2.2
+```

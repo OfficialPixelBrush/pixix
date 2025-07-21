@@ -1,16 +1,46 @@
+GNU_TOOLS=false
+NANO=true
+BUSYBOX=true
+
+ARCHIVE_BASH=bash-5.3.tar.gz
+ARCHIVE_COREUTILS=coreutils-9.7.tar.gz
+ARCHIVE_BUSYBOX=busybox-1.36.1.tar.bz2
+
 # Install Dependencies
 echo "Installing Dependencies..."
-apt install isolinux
+apt install isolinux flex bison bc genisoimage libc6-dev-i386
 
 # Download necessary code
 echo "Cloning latest kernel..."
-git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-echo "Cloning bash..."
-wget https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz
-tar -xf bash-5.3.tar.gz
-echo "Cloning coreutils..."
-wget https://ftp.gnu.org/gnu/coreutils/coreutils-9.7.tar.gz
-tar -xf coreutils-9.7.tar.gz
+git clone --depth=1 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+if [ "$NANO" = true ]; then
+    echo "Cloning nano..."
+    git clone --depth=1 https://git.savannah.gnu.org/git/nano.git
+fi
+
+if [ "$GNU_TOOLS" = true ]; then
+    if [ ! -e "$ARCHIVE_BASH"] ; then
+        echo "Cloning bash..."
+        wget https://ftp.gnu.org/gnu/bash/$ARCHIVE_BASH
+        tar -xf $ARCHIVE_BASH
+    fi
+    if [ ! -e "$ARCHIVE_COREUTILS" ]; then
+        echo "Cloning coreutils..."
+        wget https://ftp.gnu.org/gnu/coreutils/$ARCHIVE_COREUTILS
+        tar -xf $ARCHIVE_COREUTILS
+    fi
+fi
+
+if [ "$BUSYBOX" = true ]; then
+    echo "Cloning Busybox..."
+    git clone --depth=1 https://github.com/mirror/busybox
+    #if [ ! -e "$ARCHIVE_BUSYBOX" ]; then
+    #    echo "Cloning Busybox..."
+    #    wget https://busybox.net/downloads/$ARCHIVE_BUSYBOX
+    #    tar -xf $ARCHIVE_BUSYBOX
+    #fi
+fi
 
 # Copy config to kernel
 echo "Copying kernel config..."

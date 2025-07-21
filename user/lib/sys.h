@@ -70,11 +70,12 @@ struct linux_dirent64 {
 
 int sys_exit(int status);
 int sys_fork();
-ssize_t sys_read(int fd, void *buf, size_t count);
-ssize_t sys_write(int fd, const void *buf, size_t count);
+int sys_read(int fd, void *buf, size_t count);
+int sys_write(int fd, const void *buf, size_t count);
 int sys_open(const void *buf, int flags, int mode);
 int sys_close(int fd);
 int sys_execve(const char *filename, char *const argv[], char *const envp[]);
+int sys_getpid();
 int sys_mount(const char *source, const char *target, const char *filesystemtype, unsigned long mountflags, const void *data);
 int sys_mkdir(const char *name, int mode);
 int sys_sysinfo(void *info);

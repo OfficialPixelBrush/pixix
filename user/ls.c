@@ -1,5 +1,5 @@
-#include "sys.h"
-#include "lib.h"
+#include "lib/sys.h"
+#include "lib/lib.h"
 
 #define BUF_SIZE 8192
 

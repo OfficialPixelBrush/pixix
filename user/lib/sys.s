@@ -7,6 +7,7 @@
 .global sys_open
 .global sys_close
 .global sys_execve
+.global sys_getpid
 .global sys_mount
 .global sys_mkdir
 .global sys_sethostname
@@ -50,12 +51,23 @@ sys_open:
     int 0x80
     ret
 
+sys_close:
+    mov ebx, [esp + 4]
+    mov eax, 6
+    int 0x80
+    ret
+
 sys_execve:
     mov ebx, [esp + 4]
     mov ecx, [esp + 8]
     mov edx, [esp + 12]
     mov esi, [esp + 16]
     mov eax, 11
+    int 0x80
+    ret
+
+sys_getpid:
+    mov eax, 20
     int 0x80
     ret
 

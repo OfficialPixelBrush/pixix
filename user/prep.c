@@ -1,6 +1,6 @@
 // Incredibly minimal init system that populates dev and stuff
-#include "sys.h"
-#include "lib.h"
+#include "lib/sys.h"
+#include "lib/lib.h"
 
 int main() {
     sys_write(STDOUT,"Running prep...\n",16);

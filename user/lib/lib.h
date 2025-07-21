@@ -1,3 +1,4 @@
+// Helper libarary with convenient functions
 #include "sys.h"
 
 #ifndef LIB_H
@@ -69,6 +70,9 @@ void errprint(int number) {
             break;
         case -22:
             sys_write(STDOUT, "Invalid argument",16);
+            break;
+        case -101:
+            sys_write(STDOUT, "Network is unreachable",22);
             break;
     }
     sys_write(STDOUT,&newline,1);

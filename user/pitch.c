@@ -1,5 +1,5 @@
-#include "sys.h"
-#include "lib.h"
+#include "lib/sys.h"
+#include "lib/lib.h"
 
 #define __NEW_UTS_LEN 64
 
@@ -52,31 +52,41 @@ int main() {
             sys_write(STDOUT,"\nRAM:\t[",7);
             float freeRam = (float)info.freeram/(float)info.totalram;
             for (float i = 1.0; i > 0.0; i-=0.05) {
-                if (i < freeRam) {
+                if (i <= freeRam) {
                     sys_write(STDOUT,"-",1);
                 } else {
                     sys_write(STDOUT,"#",1);
                 }
             }
-            sys_write(STDOUT,"]",1);
+            sys_write(STDOUT,"] ",2);
+            printint((info.totalram-info.freeram)/1024);
+            sys_write(STDOUT," / ",3);
+            printint(info.totalram/1024);
+            sys_write(STDOUT," KiB",4);
         }
         
         if (info.totalswap) {
             sys_write(STDOUT,"\nSwap:\t[",8);
             float freeSwap = (float)info.freeswap/(float)info.totalswap;
             for (float i = 1.0; i > 0.0; i-=0.05) {
-                if (i < freeSwap) {
+                if (i <= freeSwap) {
                     sys_write(STDOUT,"-",1);
                 } else {
                     sys_write(STDOUT,"#",1);
                 }
             }
-            sys_write(STDOUT,"]",1);
+            sys_write(STDOUT,"] ",2);
+            printint((info.totalswap-info.freeswap)/1024);
+            sys_write(STDOUT," / ",3);
+            printint(info.totalswap/1024);
+            sys_write(STDOUT," KiB",4);
         }
         
         if (info.uptime) {
             sys_write(STDOUT,"\nUptime:\t[",9);
-            printint(info.uptime/60);
+            printint(info.uptime/60/60);
+            sys_write(STDOUT,"h ",2);
+            printint(info.uptime/60%60);
             sys_write(STDOUT,"min ",4);
             printint(info.uptime%60);
             sys_write(STDOUT,"s",1);

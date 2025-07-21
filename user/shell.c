@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
-#include "sys.h"
+#include "lib/sys.h"
 
 #define COMMAND_MAX_LENGTH 256
 
