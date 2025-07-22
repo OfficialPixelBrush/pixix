@@ -10,6 +10,7 @@
 .global sys_mknod
 .global sys_getpid
 .global sys_mount
+.global sys_umount
 .global sys_mkdir
 .global sys_ioctl
 .global sys_setpgid
@@ -64,7 +65,6 @@ sys_execve:
     mov ebx, [esp + 4]
     mov ecx, [esp + 8]
     mov edx, [esp + 12]
-    mov esi, [esp + 16]
     mov eax, 11
     int 0x80
     ret
@@ -89,6 +89,12 @@ sys_mount:
     mov esi, [esp + 16]
     mov edi, [esp + 20]
     mov eax, 21
+    int 0x80
+    ret
+
+sys_umount:
+    mov ebx, [esp + 4]
+    mov eax, 22
     int 0x80
     ret
 
@@ -135,7 +141,7 @@ sys_getdents64:
     mov ebx, [esp + 4]
     mov ecx, [esp + 8]
     mov edx, [esp + 12]
-    mov eax, 220
+    mov eax, 217
     int 0x80
     ret
 
@@ -143,6 +149,7 @@ sys_waitid:
     mov ebx, [esp + 4]
     mov ecx, [esp + 8]
     mov edx, [esp + 12]
+    mov esi, [esp + 16]
     mov eax, 284
     int 0x80
     ret

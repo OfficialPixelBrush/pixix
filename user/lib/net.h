@@ -68,6 +68,6 @@ int sys_socket(int family, int type, int protocol);
 int sys_bind(int fd, const void *addr, int addrlen);
 int sys_connect(int fd, struct sockaddr_in *uservaddr, int addrlen);
 int sys_setsockopt(int sockfd, int level, int optname, const void *optval, int optlen);
-int sys_sendto(int fd, const void *buf, size_t len, int flags, const struct sockaddr *addr, int addrlen);
-int sys_recvfrom(int fd, void *buf, size_t size, int flags, struct sockaddr *addr, int *addrlen);
+int sys_sendto(int fd, const void *buf, unsigned int len, int flags, const struct sockaddr *addr, int addrlen);
+int sys_recvfrom(int fd, void *buf, unsigned int size, int flags, struct sockaddr *addr, int *addrlen);
 #endif

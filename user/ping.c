@@ -4,10 +4,13 @@
 #include "lib/net.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) { sys_exit(1); }
+    if (argc < 2) {
+        sys_write(STDOUT, "Not enough arguments!\n", 22);
+        sys_exit(1);
+    }
     int ip = readnum(argv[1]);
     int sock = sys_socket(AF_INET,SOCK_STREAM,0);
-    if (sock < 0) errprint(sock);
+    if (sock < 0) printerr(sock);
 
     struct sockaddr_in addr = {
         .sin_family = AF_INET,
@@ -16,7 +19,7 @@ int main(int argc, char *argv[]) {
     };
     
     sys_write(STDOUT, "Connecting...\n", 14);
-    errprint(sys_connect(sock, &addr, sizeof(addr)));
+    printerr(sys_connect(sock, &addr, sizeof(addr)));
     sys_write(STDOUT, "Connected to 0x", 15);
     printhex(ip);
     sys_write(STDOUT, "!\n",2);
@@ -29,7 +32,7 @@ int main(int argc, char *argv[]) {
     int len = sys_read(sock,buf,sizeof(buf));
     
     if (len < 0) {
-        errprint(len);
+        printerr(len);
     } else {
         sys_write(STDOUT, "IP is reachable!\n", 17);
     }

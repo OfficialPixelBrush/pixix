@@ -14,4 +14,13 @@ int strlen(const char* p) {
     }
     return length;
 }
+
+int strcmp(const char* a, const char* b) {
+    while (*a && (*a == *b)) {
+        a++;
+        b++;
+    }
+    return *(const unsigned char*)a - *(const unsigned char*)b;
+}
+
 #endif

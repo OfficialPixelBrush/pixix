@@ -1,10 +1,14 @@
-#include <unistd.h>
-
+// Central system library
 #ifndef SYS_H
 #define SYS_H
 
 #define STDIN 0
 #define STDOUT 1
+
+#define P_ALL 0
+#define WEXITED 4
+
+#define TIOCSPGRP 0x5410
 
 enum OC_ACCESS {
     O_ACCMODE   = 0003,
@@ -62,30 +66,29 @@ enum MOUNT_FLAGS {
 
 struct linux_dirent64 {
     unsigned long   d_ino;
-    long            d_off;
+    unsigned long   d_off;
     unsigned short  d_reclen;
-    unsigned char   d_type;
+	unsigned char	d_type;
     char            d_name[];
 };
 
-#define TIOCSPGRP 0x5410
-
 int sys_exit(int status);
 int sys_fork();
-int sys_read(int fd, void *buf, size_t count);
-int sys_write(int fd, const void *buf, size_t count);
+int sys_read(int fd, void *buf, unsigned int count);
+int sys_write(int fd, const void *buf, unsigned int count);
 int sys_open(const void *buf, int flags, int mode);
 int sys_close(int fd);
 int sys_execve(const char *filename, char *const argv[], char *const envp[]);
 int sys_mknod(const char *filename, int mode, unsigned int dev);
 int sys_getpid();
 int sys_mount(const char *source, const char *target, const char *filesystemtype, unsigned long mountflags, const void *data);
+int sys_umount(const char *source);
 int sys_mkdir(const char *name, int mode);
 int sys_ioctl(int fd, int request, const void *argp);
-int sys_setpgid(pid_t pid, pid_t pgid);
+int sys_setpgid(unsigned int pid, unsigned int pgid);
 int sys_setsid();
 int sys_sysinfo(void *info);
 int sys_uname(void *buf);
-int sys_getdents64(int fd, char* buf, int nbytes);
+int sys_getdents64(int fd, void *dirp, unsigned int count);
 int sys_waitid(int idtype, int id, void *infop, int options);
 #endif

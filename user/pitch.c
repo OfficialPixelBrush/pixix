@@ -30,7 +30,7 @@ struct sysinfo {
                             /* Padding to 64 bytes */
 };
 
-int main() {
+void _start() {
     struct utsname uts;
     sys_write(STDOUT,"\n",1);
     if(sys_uname(&uts) == 0) {

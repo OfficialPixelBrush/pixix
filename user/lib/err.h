@@ -5,7 +5,7 @@
 #ifndef ERR_H
 #define ERR_H
 
-void errprint(int number) {
+void printerr(int number) {
     if (number == 0) { return; }
     printint(number);
     sys_write(STDOUT, ": ", 2);
@@ -25,6 +25,9 @@ void errprint(int number) {
         case -5:
             sys_write(STDOUT, "Input/output error",18);
             break;
+        case -9:
+            sys_write(STDOUT, "Bad file descriptor",19);
+            break;
         case -14:
             sys_write(STDOUT, "Bad address",11);
             break;
@@ -36,6 +39,9 @@ void errprint(int number) {
             break;
         case -25:
             sys_write(STDOUT, "Inappropriate ioctl for device",30);
+            break;
+        case -30:
+            sys_write(STDOUT, "Read-only file system",21);
             break;
         case -101:
             sys_write(STDOUT, "Network is unreachable",22);

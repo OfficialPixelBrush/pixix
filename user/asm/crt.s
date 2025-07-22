@@ -7,6 +7,7 @@ _start:
     push ebx    # Pointer to argv[0]            
     push eax    # Argument count
     call main
+    add esp, 12 # Clean up stack (3 * 4 bytes)
     mov ebx,eax # Get the exit code
     mov eax, 1  # sys_exit
     int 0x80

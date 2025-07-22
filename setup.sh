@@ -1,6 +1,5 @@
 GET_NANO=false
 GET_BUSYBOX=true
-GET_PARTED=true
 GET_GRUB=true
 
 # Install Dependencies
@@ -16,7 +15,7 @@ cd ..
 
 # Copy config to kernel
 echo "Copying kernel config..."
-cp kernelconfig linux/.config
+cp kernel.config linux/.config
 
 if [ "$GET_NANO" = true ]; then
     echo "Cloning nano..."
@@ -38,8 +37,11 @@ if [ "$GET_GRUB" = true ]; then
     echo "Cloning Grub..."
     git clone --depth=1 git://git.savannah.gnu.org/grub.git
     cd grub
-    rm -r buikd
-    mkdir build
     git pull
-    cd ..
+    ./bootstrap
+    rm -r build
+    mkdir build
+    cd build
+    ../configure --target=i386 --prefix=/bin
+    cd ../..
 fi
