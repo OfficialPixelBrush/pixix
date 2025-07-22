@@ -17,7 +17,7 @@
 .global sys_setsid
 .global sys_sysinfo
 .global sys_uname
-.global sys_getdents64
+.global sys_getdents
 .global sys_waitid
 
 sys_exit:
@@ -137,11 +137,11 @@ sys_uname:
     int 0x80
     ret
 
-sys_getdents64:
+sys_getdents:
     mov ebx, [esp + 4]
     mov ecx, [esp + 8]
     mov edx, [esp + 12]
-    mov eax, 217
+    mov eax, 141
     int 0x80
     ret
 

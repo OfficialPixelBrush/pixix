@@ -25,7 +25,7 @@ cd ..
 
 echo "Building busybox..."
 cd busybox
-cp -n ../busybox.config .config
+cp --update=none ../busybox.config .config
 make busybox \
   CFLAGS="-march=$TARGET_ARCH -m32 -static" \
   LDFLAGS="-march=$TARGET_ARCH -m32 -static"

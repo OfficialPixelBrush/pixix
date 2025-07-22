@@ -1,5 +1,6 @@
 .intel_syntax noprefix
-    .global _start
+.global _start
+
 _start:
     mov  eax, [esp]     # Get value of argument count
     lea  ebx, [esp + 4] # Get pointer to argv

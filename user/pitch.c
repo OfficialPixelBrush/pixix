@@ -2,8 +2,6 @@
 #include "lib/num.h"
 #include "lib/str.h"
 
-#define __NEW_UTS_LEN 64
-
 struct utsname {
     char sysname[65];
     char nodename[65];

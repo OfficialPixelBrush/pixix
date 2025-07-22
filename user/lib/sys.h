@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 // Central system library
 #ifndef SYS_H
 #define SYS_H
@@ -64,12 +66,11 @@ enum MOUNT_FLAGS {
     MS_NOUSER = (1<<31)
 };
 
-struct linux_dirent64 {
-    unsigned long   d_ino;
-    unsigned long   d_off;
-    unsigned short  d_reclen;
-	unsigned char	d_type;
-    char            d_name[];
+struct linux_dirent {
+    int32_t  d_ino;
+    int32_t  d_off;
+    uint16_t d_reclen;
+    char     d_name[];
 };
 
 int sys_exit(int status);
@@ -89,6 +90,6 @@ int sys_setpgid(unsigned int pid, unsigned int pgid);
 int sys_setsid();
 int sys_sysinfo(void *info);
 int sys_uname(void *buf);
-int sys_getdents64(int fd, void *dirp, unsigned int count);
+int sys_getdents(int fd, void *dirp, unsigned int count);
 int sys_waitid(int idtype, int id, void *infop, int options);
 #endif
