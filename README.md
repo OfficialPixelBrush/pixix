@@ -8,7 +8,7 @@ except that my target was an i386 system with 32MB of RAM.
 - CD-ROM Drive
 - 22 Megabytes of RAM
 - i386 (for pixix applications)
-- i686 (e.g. Pentium 2, for busybox applications)
+- i686 (e.g. Pentium Pro or later, for busybox applications)
 
 ### How to run
 Just execute all.sh. This'll clone the necessary files into the repo.

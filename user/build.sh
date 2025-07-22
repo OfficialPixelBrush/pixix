@@ -1,5 +1,5 @@
-ARGS_ASM="--32 -march=i486"
-ARGS_GCC="-m32 -march=i486 -nostartfiles -ffreestanding -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-pic -fno-stack-protector -c"
+ARGS_ASM="--32 -march=i386"
+ARGS_GCC="-m32 -march=i386 -nostartfiles -ffreestanding -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-pic -fno-stack-protector -c"
 ARGS_LD="-m elf_i386 -nostdlib --gc-sections -z noexecstack -T script.ld -e _start"
 ARGS_OBJCOPY="--strip-all --remove-section=.comment --remove-section=.note.gnu.property --remove-section=.note.gnu.build-id"
 
