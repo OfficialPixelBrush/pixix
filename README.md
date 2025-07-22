@@ -6,7 +6,7 @@ except that my target was an i386 system with 32MB of RAM.
 
 ### Minimum requirements
 - CD-ROM Drive
-- 23 Megabytes of RAM
+- 22 Megabytes of RAM
 - i386 (for pixix applications)
 - i686 (e.g. Pentium 2, for busybox applications)
 
