@@ -6,6 +6,7 @@ mkdir -p initramfs/bin
 rm -rf diskfs
 mkdir diskfs
 mkdir diskfs/bin
+mkdir diskfs/mod
 echo "Welcome to the disk!" >> diskfs/text.txt
 
 # Build custom userland
@@ -13,14 +14,28 @@ echo "Building userland..."
 cd user
 chmod +x build.sh
 ./build.sh
-cp ./init.i386 ../initramfs/init
-cp ./shell.i386 ../initramfs/bin/shell
-cp ./cat.i386 ../initramfs/cat
-cp ./mount.i386 ../initramfs/mount
-cp ./ls.i386 ../initramfs/ls
-cp ./umount.i386 ../initramfs/umount
-cp ./pitch.i386 ../diskfs/pitch
-cp ./ping.i386 ../diskfs/ping
+# Copying
+cp ./init.i386    ../initramfs/bin/init
+cp ./shell.i386   ../initramfs/bin/shell
+cp ./cat.i386     ../initramfs/bin/cat
+cp ./mount.i386   ../initramfs/bin/mount
+cp ./umount.i386  ../initramfs/bin/umount
+cp ./ls.i386      ../initramfs/bin/ls
+
+cp ./pitch.i386   ../diskfs/bin/pitch
+cp ./ping.i386    ../diskfs/bin/ping
+cp ./insmod.i386  ../diskfs/bin/insmod
+cp ./mkdir.i386   ../diskfs/bin/mkdir
+cp ./ln.i386      ../diskfs/bin/ln
+cp ./install.i386 ../diskfs/install
+
+# Symlinking
+cd ../initramfs/
+ln -s bin/init init
+ln -s bin/cat cat
+ln -s bin/mount mount
+ln -s bin/umount umount
+ln -s bin/ls ls
 cd ..
 
 echo "Building busybox..."
@@ -51,6 +66,7 @@ ln -s ./bin/busybox ./route
 ln -s ./bin/busybox ./cp
 ln -s ./bin/busybox ./fdisk
 ln -s ./bin/busybox ./mkfs.ext2
+ln -s ./bin/busybox ./mkswap
 ln -s ./bin/busybox ./wget
 cd bin
 ln -s ./bin/busybox ./sh
@@ -70,6 +86,8 @@ cd linux
 cp -u ../isolinux.bin arch/x86/boot/
 cp -u ../kernel.config .config
 make ARCH=i386 KCFLAGS="-march=$TARGET_ARCH" -j"$(nproc)"
+
+find . -name "*.ko" -exec cp --parents {} ../diskfs/mod/ \;
 
 # Prepare ISO image
 make isoimage ARCH=i386 -j"$(nproc)" \

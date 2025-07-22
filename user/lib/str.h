@@ -1,4 +1,4 @@
-// Helper libarary for strings
+// Helper library for strings
 #include "sys.h"
 
 #ifndef STR_H

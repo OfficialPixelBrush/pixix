@@ -39,24 +39,6 @@ ping pitch cp* fdisk* ifconfig* mkfs.ext2* route* udhcpc* wget*
 ```
 *\* these are handled by busybox*
 
-## Getting online
-You can only get online after you've mounted the CD and
-initialized the network modules.
-```bash
-ifconfig eth0 up
-udhcpc -i eth0
-ifconfig eth0 10.0.2.15 netmask 255.255.255.0 up
-route add default gw 10.0.2.2
-```
-## Installing (WIP)
-To install pixix to the disk you need to follow these steps pretty closely.
-Since pixix aims to be as minimal as reasonably possible, very few utilities
-are included within the initramfs, and require mounting the CD.
-```bash
-mount /dev/sr0 /mnt iso9660
-```
-*(The `init` script automatically populates `dev` and creates `mnt` for your convenience.)*
-
 # Resources
 - [Linux `man 2` pages](https://linux.die.net/man/2/)
 - [Making Smallest Possible Linux Distro (x64) by Nir Lichtman](https://youtu.be/u2Juz5sQyYQ)

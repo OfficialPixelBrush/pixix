@@ -1,21 +1,12 @@
 #include "lib/sys.h"
-
-/*
-
-argv[0] = install
-argc[1] = operation (mod,diskln)
-
-*/
+#include "lib/err.h"
 
 int main(int argc, char *argv[]) {
-    /*
     char **args = argv;
     int argcount = argc;
-    if (argc < 2) {
+    if (argcount < 3) {
         sys_write(STDOUT, "Too few arguments!\n", 19);
         sys_exit(1);
     }
-    char *source = argc[1];
-    */
-    sys_exit(0);
+    printerr(sys_symlink(args[1], args[2]));
 }

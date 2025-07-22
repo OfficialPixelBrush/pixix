@@ -7,6 +7,7 @@ ARGS_OBJCOPY="--strip-all --remove-section=.comment --remove-section=.note.gnu.p
 as $ARGS_ASM asm/crt.s -o asm/crt.lib
 as $ARGS_ASM asm/sys.s -o asm/sys.lib
 as $ARGS_ASM asm/net.s -o asm/net.lib
+as $ARGS_ASM asm/mem.s -o asm/mem.lib
 
 # Build C Programs
 # No CRT (no args)
@@ -43,7 +44,18 @@ gcc $ARGS_GCC ls.c
 ld $ARGS_LD -o ls.i386 ls.o asm/crt.lib asm/sys.lib
 objcopy $ARGS_OBJCOPY ls.i386
 
-# Build Assembly Programs
-as $ARGS_ASM chroot.s -o chroot.o
-ld $ARGS_LD -o chroot.i386 chroot.o
-objcopy $ARGS_OBJCOPY chroot.i386
+gcc $ARGS_GCC mkdir.c
+ld $ARGS_LD -o mkdir.i386 mkdir.o asm/crt.lib asm/sys.lib
+objcopy $ARGS_OBJCOPY mkdir.i386
+
+gcc $ARGS_GCC ln.c
+ld $ARGS_LD -o ln.i386 ln.o asm/crt.lib asm/sys.lib
+objcopy $ARGS_OBJCOPY ln.i386
+
+gcc $ARGS_GCC insmod.c
+ld $ARGS_LD -o insmod.i386 insmod.o asm/crt.lib asm/sys.lib asm/mem.lib
+objcopy $ARGS_OBJCOPY insmod.i386
+
+gcc $ARGS_GCC install.c
+ld $ARGS_LD -o install.i386 install.o asm/crt.lib asm/sys.lib
+objcopy $ARGS_OBJCOPY install.i386

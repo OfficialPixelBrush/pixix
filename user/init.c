@@ -40,6 +40,11 @@ void prep() {
     printerr(sys_mkdir("/etc", 0755));
     sys_write(STDOUT,"/etc\n",5);
 
+    // Mount tmpfs at /run
+    printerr(sys_mkdir("/lib", 0755));
+    printerr(sys_mkdir("/lib/modules", 0755));
+    sys_write(STDOUT,"/lib/*\n",7);
+
     sys_write(STDOUT,"Prep done!\n",12);
     return;
 }

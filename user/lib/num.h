@@ -1,4 +1,4 @@
-// Helper libarary for numbers
+// Helper library for numbers
 #include "sys.h"
 
 #define MAX_NUMBER_CHARACTER 100000000
@@ -83,7 +83,24 @@ void printhex(int number) {
     }
 }
 
-int readnum(const char *p) {
+void printoct(int number) {
+    char buf[12];
+    int i = 0;
+    if (number == 0) {
+        sys_write(STDOUT, "0", 1);
+        return;
+    }
+    while (number > 0) {
+        buf[i++] = '0' + (number & 0x7);
+        number >>= 3;
+    }
+    // print in reverse
+    while (i--) {
+        sys_write(STDOUT, &buf[i], 1);
+    }
+}
+
+int readhex(const char *p) {
     int result = 0;
     const char *end = p;
     while (*end) end++;
@@ -96,6 +113,18 @@ int readnum(const char *p) {
         } else if (c >= 'A' && c <= 'F') {
             result |= (c - 'A' + 10);
         }
+    }
+    return result;
+}
+
+int readoct(const char* p) {
+    int result = 0;
+    while (*p) {
+        if (*p < '0' || *p > '7') {
+            break;
+        }
+        result = (result << 3) | (*p - '0');
+        ++p;
     }
     return result;
 }

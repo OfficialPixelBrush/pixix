@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
         sys_write(STDOUT, "Not enough arguments!\n", 22);
         sys_exit(1);
     }
-    int ip = readnum(argv[1]);
+    int ip = readhex(argv[1]);
     int sock = sys_socket(AF_INET,SOCK_STREAM,0);
     if (sock < 0) printerr(sock);
 

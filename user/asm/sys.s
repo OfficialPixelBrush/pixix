@@ -15,8 +15,12 @@
 .global sys_ioctl
 .global sys_setpgid
 .global sys_setsid
+.global sys_symlink
+.global sys_fstat
 .global sys_sysinfo
 .global sys_uname
+.global sys_init_module
+.global sys_delete_module
 .global sys_getdents
 .global sys_waitid
 
@@ -125,6 +129,20 @@ sys_setsid:
     int 0x80
     ret
 
+sys_symlink:
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov eax, 83
+    int 0x80
+    ret
+
+sys_fstat: # technically sys_newfstat
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov eax, 108
+    int 0x80
+    ret
+
 sys_sysinfo:
     mov ebx, [esp + 4]
     mov eax, 116
@@ -134,6 +152,21 @@ sys_sysinfo:
 sys_uname:
     mov ebx, [esp + 4]
     mov eax, 122
+    int 0x80
+    ret
+
+sys_init_module:
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov edx, [esp + 12]
+    mov eax, 128
+    int 0x80
+    ret
+
+sys_delete_module:
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov eax, 129
     int 0x80
     ret
 

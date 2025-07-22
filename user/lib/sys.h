@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <sys/types.h>
 
 // Central system library
 #ifndef SYS_H
@@ -67,29 +67,68 @@ enum MOUNT_FLAGS {
 };
 
 struct linux_dirent {
-    int32_t  d_ino;
-    int32_t  d_off;
-    uint16_t d_reclen;
+    ino_t  d_ino;
+    off_t  d_off;
+    unsigned short d_reclen;
     char     d_name[];
+};
+
+enum linux_dirent_type {
+    DT_UNKNOWN = 0,
+    DT_FIFO    = 1,
+    DT_CHR     = 2,
+    DT_DIR     = 4,
+    DT_BLK     = 6,
+    DT_REG     = 8,
+    DT_LNK     = 10,
+    DT_SOCK    = 12,
+    DT_WHT     = 14 // whiteout (used on some filesystems like unionfs)
+};
+
+struct stat {
+    unsigned short st_dev;
+    unsigned short __pad1;
+    unsigned long  st_ino;
+    unsigned short st_mode;
+    unsigned short st_nlink;
+    unsigned short st_uid;
+    unsigned short st_gid;
+    unsigned short st_rdev;
+    unsigned short __pad2;
+    unsigned long  st_size;
+    unsigned long  st_blksize;
+    unsigned long  st_blocks;
+    unsigned long  st_atime;
+    unsigned long  st_atime_nsec;
+    unsigned long  st_mtime;
+    unsigned long  st_mtime_nsec;
+    unsigned long  st_ctime;
+    unsigned long  st_ctime_nsec;
+    unsigned long  __unused4;
+    unsigned long  __unused5;
 };
 
 int sys_exit(int status);
 int sys_fork();
-int sys_read(int fd, void *buf, unsigned int count);
-int sys_write(int fd, const void *buf, unsigned int count);
+int sys_read(unsigned int fd, void *buf, unsigned int count);
+int sys_write(unsigned int fd, const void *buf, unsigned int count);
 int sys_open(const void *buf, int flags, int mode);
-int sys_close(int fd);
+int sys_close(unsigned int fd);
 int sys_execve(const char *filename, char *const argv[], char *const envp[]);
 int sys_mknod(const char *filename, int mode, unsigned int dev);
 int sys_getpid();
 int sys_mount(const char *source, const char *target, const char *filesystemtype, unsigned long mountflags, const void *data);
 int sys_umount(const char *source);
 int sys_mkdir(const char *name, int mode);
-int sys_ioctl(int fd, int request, const void *argp);
+int sys_ioctl(unsigned int fd, int request, const void *argp);
 int sys_setpgid(unsigned int pid, unsigned int pgid);
 int sys_setsid();
+int sys_symlink(const char *oldpath, const char *newpath);
+int sys_fstat(unsigned int fd, struct stat *statbuf);
 int sys_sysinfo(void *info);
 int sys_uname(void *buf);
-int sys_getdents(int fd, void *dirp, unsigned int count);
+int sys_init_module(void *umod, unsigned long len, const char *uargs);
+int sys_delete_module(const char *name_user, unsigned int flags);
+int sys_getdents(unsigned int fd, void *dirp, unsigned int count);
 int sys_waitid(int idtype, int id, void *infop, int options);
 #endif

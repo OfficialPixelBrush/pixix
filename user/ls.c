@@ -7,11 +7,17 @@
 #define BUFFER_SIZE 4096
 
 int main(int argc, char *argv[]) {
+    char *dest = 0;
+    char flag = 'o';
     if (argc < 2) {
-        sys_write(STDOUT, "Not enough arguments!\n", 22);
-        sys_exit(1);
+        dest = ".\0";
+    } else if (argc == 2) {
+        dest = argv[1];
+    } else if (argc >= 3) {
+        flag = *argv[1];
+        dest = argv[2];
     }
-    int fd = sys_open(argv[1], O_RDONLY | O_DIRECTORY, 0 );
+    int fd = sys_open(dest, O_RDONLY | O_DIRECTORY, 0 );
     if (fd < 0) printerr(fd);
     
     char buf[BUFFER_SIZE];
@@ -23,11 +29,18 @@ int main(int argc, char *argv[]) {
 
         for (int bpos = 0; bpos < nread;) {
             struct linux_dirent *d = (struct linux_dirent *) (buf + bpos);
-            uint8_t d_type = *(buf + bpos + d->d_reclen - 1);
-            if (d->d_name[0] != '.') {
-                sys_write(STDOUT, d->d_name, strlen(d->d_name));
-                sys_write(STDOUT, " ", 1);
+            char d_type = *(buf + bpos + d->d_reclen - 1);
+            // ignore symlinks unless we ask for them
+            if (d_type == DT_LNK && flag != 's') {
+                goto skip;
             }
+            // Ignore hidden unless we ask for them
+            if (d->d_name[0] == '.' && flag != 'h') {
+                goto skip;
+            }
+            sys_write(STDOUT, d->d_name, strlen(d->d_name));
+            sys_write(STDOUT, " ", 1);
+            skip:
             bpos += d->d_reclen;
         }
     }
