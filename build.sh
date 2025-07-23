@@ -15,19 +15,20 @@ cd user
 chmod +x build.sh
 ./build.sh
 # Copying
-cp ./init.i386    ../initramfs/bin/init
-cp ./shell.i386   ../initramfs/bin/shell
-cp ./cat.i386     ../initramfs/bin/cat
-cp ./mount.i386   ../initramfs/bin/mount
-cp ./umount.i386  ../initramfs/bin/umount
-cp ./ls.i386      ../initramfs/bin/ls
+cp ./bin/init.i386    ../initramfs/bin/init
+cp ./bin/shell.i386   ../initramfs/bin/shell
+cp ./bin/cat.i386     ../initramfs/bin/cat
+cp ./bin/mount.i386   ../initramfs/bin/mount
+cp ./bin/umount.i386  ../initramfs/bin/umount
+cp ./bin/ls.i386      ../initramfs/bin/ls
 
-cp ./pitch.i386   ../diskfs/bin/pitch
-cp ./ping.i386    ../diskfs/bin/ping
-cp ./insmod.i386  ../diskfs/bin/insmod
-cp ./mkdir.i386   ../diskfs/bin/mkdir
-cp ./ln.i386      ../diskfs/bin/ln
-cp ./install.i386 ../diskfs/install
+cp ./bin/cd.i386      ../diskfs/bin/cd
+cp ./bin/pitch.i386   ../diskfs/bin/pitch
+cp ./bin/ping.i386    ../diskfs/bin/ping
+cp ./bin/insmod.i386  ../diskfs/bin/insmod
+cp ./bin/mkdir.i386   ../diskfs/bin/mkdir
+cp ./bin/ln.i386      ../diskfs/bin/ln
+cp ./bin/install.i386 ../diskfs/install
 
 # Symlinking
 cd ../initramfs/
@@ -68,9 +69,7 @@ ln -s ./bin/busybox ./fdisk
 ln -s ./bin/busybox ./mkfs.ext2
 ln -s ./bin/busybox ./mkswap
 ln -s ./bin/busybox ./wget
-cd bin
-ln -s ./bin/busybox ./sh
-cd ../..
+cd ..
 
 # Make into init.cpio
 echo "Making init..."

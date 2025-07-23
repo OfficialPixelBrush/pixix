@@ -1,3 +1,7 @@
+if [ ! -f pixix_disk.qcow2 ]; then
+    qemu-img create -f qcow2 pixix_disk.qcow2 20G
+fi
+
 qemu-system-i386 \
     -m 64M \
     -cpu pentium2 \

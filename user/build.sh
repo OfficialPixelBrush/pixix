@@ -1,6 +1,9 @@
+rm -rf bin
+mkdir -p bin
+cd src
 ARGS_ASM="--32 -march=i386"
-ARGS_GCC="-m32 -march=i386 -nostartfiles -ffreestanding -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-pic -fno-stack-protector -c"
-ARGS_LD="-m elf_i386 -nostdlib --gc-sections -z noexecstack -T script.ld -e _start"
+ARGS_GCC="-m32 -march=i386 -Wl,--omit-header -nostartfiles -ffreestanding -fno-asynchronous-unwind-tables -fomit-frame-pointer -fno-pic -fno-stack-protector -c"
+ARGS_LD="-m elf_i386 -z max-page-size=0x1000 -nostdlib --gc-sections -z noexecstack -T ../script.ld -e _start"
 ARGS_OBJCOPY="--strip-all --remove-section=.comment --remove-section=.note.gnu.property --remove-section=.note.gnu.build-id"
 
 # Build Libaries
@@ -52,6 +55,10 @@ gcc $ARGS_GCC ln.c
 ld $ARGS_LD -o ln.i386 ln.o asm/crt.lib asm/sys.lib
 objcopy $ARGS_OBJCOPY ln.i386
 
+gcc $ARGS_GCC cd.c
+ld $ARGS_LD -o cd.i386 cd.o asm/crt.lib asm/sys.lib
+objcopy $ARGS_OBJCOPY cd.i386
+
 gcc $ARGS_GCC insmod.c
 ld $ARGS_LD -o insmod.i386 insmod.o asm/crt.lib asm/sys.lib asm/mem.lib
 objcopy $ARGS_OBJCOPY insmod.i386
@@ -59,3 +66,6 @@ objcopy $ARGS_OBJCOPY insmod.i386
 gcc $ARGS_GCC install.c
 ld $ARGS_LD -o install.i386 install.o asm/crt.lib asm/sys.lib
 objcopy $ARGS_OBJCOPY install.i386
+
+mv *.i386 ../bin
+cd ..
