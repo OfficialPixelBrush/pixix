@@ -63,8 +63,12 @@ gcc $ARGS_GCC insmod.c
 ld $ARGS_LD -o insmod.i386 insmod.o asm/crt.lib asm/sys.lib asm/mem.lib
 objcopy $ARGS_OBJCOPY insmod.i386
 
+gcc $ARGS_GCC cp.c
+ld $ARGS_LD -o cp.i386 cp.o asm/crt.lib asm/sys.lib
+objcopy $ARGS_OBJCOPY cp.i386
+
 gcc $ARGS_GCC install.c
-ld $ARGS_LD -o install.i386 install.o asm/crt.lib asm/sys.lib
+ld $ARGS_LD -o install.i386 install.o asm/crt.lib asm/sys.lib asm/mem.lib
 objcopy $ARGS_OBJCOPY install.i386
 
 mv *.i386 ../bin

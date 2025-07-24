@@ -22,5 +22,4 @@ int strcmp(const char* a, const char* b) {
     }
     return *(const unsigned char*)a - *(const unsigned char*)b;
 }
-
 #endif

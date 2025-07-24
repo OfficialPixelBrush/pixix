@@ -29,6 +29,9 @@ void printerr(int number) {
         case -9:
             sys_write(STDOUT, "Bad file descriptor",19);
             break;
+        case -13:
+            sys_write(STDOUT, "Permission denied",11);
+            break;
         case -14:
             sys_write(STDOUT, "Bad address",11);
             break;

@@ -1,6 +1,7 @@
 #include "lib/sys.h"
 #include "lib/str.h"
 #include "lib/err.h"
+#include "lib/dir.h"
 
 // Based on example in https://linux.die.net/man/2/getdents64
 

@@ -1,6 +1,8 @@
 # Pixix
 A hyper-minimal Linux Distro for i386 and above.
 
+<img style="min-width: 100px; image-rendering: pixelated" src="images/pixix.png">
+
 A good chunk of this was copied/inspired by [Making Smallest Possible Linux Distro (x64) by Nir Lichtman](https://www.youtube.com/watch?v=u2Juz5sQyYQ),
 except that my target was an i386 system with 32MB of RAM.
 

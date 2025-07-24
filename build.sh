@@ -28,6 +28,7 @@ cp ./bin/ping.i386    ../diskfs/bin/ping
 cp ./bin/insmod.i386  ../diskfs/bin/insmod
 cp ./bin/mkdir.i386   ../diskfs/bin/mkdir
 cp ./bin/ln.i386      ../diskfs/bin/ln
+cp ./bin/cp.i386      ../diskfs/bin/cp
 cp ./bin/install.i386 ../diskfs/install
 
 # Symlinking
@@ -64,7 +65,6 @@ cd diskfs
 ln -s ./bin/busybox ./ifconfig
 ln -s ./bin/busybox ./udhcpc
 ln -s ./bin/busybox ./route
-ln -s ./bin/busybox ./cp
 ln -s ./bin/busybox ./fdisk
 ln -s ./bin/busybox ./mkfs.ext2
 ln -s ./bin/busybox ./mkswap
