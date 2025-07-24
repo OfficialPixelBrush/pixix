@@ -31,13 +31,12 @@ All of this was tested on Linux Mint 22.1, so modify `setup.sh` for whatever dis
 ## Applications
 ### Available in the initramfs
 ```
-init shell cat mount umount ls*
+init shell cat mount umount ls
 ```
-*\* these are handled by busybox*
 
 ### Available on the disk
 ```
-ping pitch cp* fdisk* ifconfig* mkfs.ext2* route* udhcpc* wget*
+ping pitch cp fdisk* ifconfig* mkfs.ext2* route* udhcpc* wget*
 ```
 *\* these are handled by busybox*
 
