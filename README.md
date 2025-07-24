@@ -1,3 +1,5 @@
+<img style="min-width: 100px; image-rendering: pixelated" src="images/pixix.png">
+
 # Pixix
 A hyper-minimal Linux Distro for i386 and above.
 
