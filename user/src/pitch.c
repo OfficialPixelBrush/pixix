@@ -1,8 +1,9 @@
 #include "lib/sys.h"
 #include "lib/num.h"
 #include "lib/str.h"
-#include "img/pixix.h"
 #include "lib/err.h"
+#include "lib/gui.h"
+#include "img/pixix.h"
 
 struct utsname {
     char sysname[65];
@@ -91,38 +92,61 @@ int vendorStringToId(char* vendor) {
     return 0;
 }
 
+// All of this info has been taken from https://en.wikipedia.org/wiki/CPUID
 void printCpuModel(int vendor_id, int processor_info) {
     int familyId = (processor_info >> 8) & 0xF;
+    int extendedFamilyId = (processor_info >> 20) & 0xFF;
+    if (familyId == 0xF) {
+        familyId += extendedFamilyId;
+    }
     if (vendor_id == 1) {
         switch(familyId) {
             case 0x4:
                 sys_write(STDOUT,"Am486",5);
-                break;
+                return;
             case 0x5:
                 sys_write(STDOUT,"K5/K6",5);
-                break;
+                return;
             case 0x6:
                 sys_write(STDOUT,"K7/Athlon",9);
-                break;
-            default:
-                printint(familyId);
+                return;
+            case 0x0F:
+                sys_write(STDOUT,"K8/Hammer",9);
+                return;
+            case 0x10:
+                sys_write(STDOUT,"K10/Phenom",10);
+                return;
+            case 0x17:
+                sys_write(STDOUT,"Zen 1/2",7);
+                return;
+            case 0x19:
+                sys_write(STDOUT,"Zen 3/4",7);
+                return;
+            case 0x1A:
+                sys_write(STDOUT,"Zen 5",5);
+                return;
         }
     // Default to Intel
     } else {
         switch(familyId) {
             case 0x4:
                 sys_write(STDOUT,"486",3);
-                break;
+                return;
             case 0x5:
                 sys_write(STDOUT,"Pentium",7);
-                break;
+                return;
             case 0x6:
                 sys_write(STDOUT,"Pentium II or later",19);
-                break;
-            default:
-                printint(familyId);
+                return;
+            case 0x0F:
+                sys_write(STDOUT,"Pentium 4",9);
+                return;
+            case 0x13:
+                sys_write(STDOUT,"Intel Core",10);
+                return;
         }
     }
+    printhex(familyId);
 }
 
 void _start() {
@@ -173,38 +197,24 @@ void _start() {
                 break;
             case 4:
                 if (info.totalram) {
-                    sys_write(STDOUT,"RAM:\t[",7);
-                    float freeRam = (float)info.freeram/(float)info.totalram;
-                    for (float i = 1.0; i > 0.0; i-=0.05) {
-                        if (i <= freeRam) {
-                            sys_write(STDOUT,"-",1);
-                        } else {
-                            sys_write(STDOUT,"#",1);
-                        }
-                    }
-                    sys_write(STDOUT,"] ",2);
-                    printint((info.totalram-info.freeram)/1024);
+                    sys_write(STDOUT,"RAM:\t",5);
+                    printbar((float)info.freeram,(float)info.totalram,10.0f);
+                    sys_write(STDOUT," ",1);
+                    printfix((info.totalram-info.freeram)/1024,1000,2);
                     sys_write(STDOUT," / ",3);
-                    printint(info.totalram/1024);
-                    sys_write(STDOUT," KiB",4);
+                    printfix(info.totalram/1024,1000,2);
+                    sys_write(STDOUT," MiB",4);
                 }
                 break;
             case 5:
                 if (info.totalswap) {
-                    sys_write(STDOUT,"Swap:\t[",8);
-                    float freeSwap = (float)info.freeswap/(float)info.totalswap;
-                    for (float i = 1.0; i > 0.0; i-=0.05) {
-                        if (i <= freeSwap) {
-                            sys_write(STDOUT,"-",1);
-                        } else {
-                            sys_write(STDOUT,"#",1);
-                        }
-                    }
-                    sys_write(STDOUT,"] ",2);
-                    printint((info.totalswap-info.freeswap)/1024);
+                    sys_write(STDOUT,"Swap:\t",6);
+                    printbar((float)info.freeswap,(float)info.totalswap,10.0f);
+                    sys_write(STDOUT," ",1);
+                    printfix((info.totalswap-info.freeswap)/1024,1000,2);
                     sys_write(STDOUT," / ",3);
-                    printint(info.totalswap/1024);
-                    sys_write(STDOUT," KiB",4);
+                    printfix(info.totalswap/1024,1000,2);
+                    sys_write(STDOUT," MiB",4);
                 }
                 break;
             case 6:

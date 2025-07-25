@@ -31,41 +31,43 @@ void printint(int number) {
 
 void printfix(int number, int scaler, int digitsAfterDecimal) {
     if (number < 0) {
-        sys_write(STDOUT,"-",1);
-        number=-number;
+        sys_write(STDOUT, "-", 1);
+        number = -number;
     }
-    if (number == 0) {
-        sys_write(STDOUT,"0",1);
+
+    int integerPart = number / scaler;
+    int fractionPart = number % scaler;
+
+    // Print integer part
+    char buf[32];
+    int idx = 0;
+    if (integerPart == 0) {
+        buf[idx++] = '0';
+    } else {
+        int temp = integerPart;
+        while (temp > 0) {
+            buf[idx++] = (temp % 10) + '0';
+            temp /= 10;
+        }
+        // reverse
+        for (int i = 0; i < idx / 2; i++) {
+            char c = buf[i];
+            buf[i] = buf[idx - 1 - i];
+            buf[idx - 1 - i] = c;
+        }
     }
-    int digitsSinceDecimal = -1;
-    int divisor = MAX_NUMBER_CHARACTER;
-    int foundNonZero = 0;
-    while(divisor > 0) {
-        // Get the whole number
-        int result = number / divisor;
-        // If the divisor and scaler match up, print a period
-        if (divisor*10 == scaler) {
-            sys_write(STDOUT,".",1);
-            digitsSinceDecimal = 0;
+    sys_write(STDOUT, buf, idx);
+
+    if (digitsAfterDecimal > 0) {
+        sys_write(STDOUT, ".", 1);
+
+        // Scale fraction to digitsAfterDecimal
+        for (int i = 0; i < digitsAfterDecimal; i++) {
+            fractionPart *= 10;
+            char c = (fractionPart / scaler) + '0';
+            sys_write(STDOUT, &c, 1);
+            fractionPart %= scaler;
         }
-        // Count how many decimal numbers we have left
-        if (digitsSinceDecimal >= 0) {
-            digitsSinceDecimal++;
-        }
-        // If we're done, we're done
-        if (digitsSinceDecimal > digitsAfterDecimal) {
-            break;
-        }
-        // Search for the leading 0
-        if (result != 0 && digitsSinceDecimal == 0) {
-            foundNonZero = 1;
-        }
-        if (foundNonZero) {
-            char resChar = '0'+result;
-            sys_write(STDOUT,&resChar,1);
-        }
-        number = number % divisor;
-        divisor /= 10;
     }
 }
 

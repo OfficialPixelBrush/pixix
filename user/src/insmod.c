@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     if (ret < 0) {
         sys_munmap(module_image, st.st_size);
         sys_close(fd);
-        printerr_origin(ret,"sys_init_module");
+        printerr(ret);
         sys_exit(1);
     }
 

@@ -1,9 +1,12 @@
 TARGET_ARCH="i386"
 
-rm -rf initramfs
-mkdir -p initramfs/bin
+rm -rf initramfs diskfs
 
-rm -rf diskfs
+sleep 1
+
+mkdir initramfs
+mkdir initramfs/bin
+
 mkdir diskfs
 mkdir diskfs/bin
 mkdir diskfs/mod
@@ -15,21 +18,21 @@ cd user
 chmod +x build.sh
 ./build.sh
 # Copying
-cp ./bin/init.i386    ../initramfs/bin/init
-cp ./bin/shell.i386   ../initramfs/bin/shell
-cp ./bin/cat.i386     ../initramfs/bin/cat
-cp ./bin/mount.i386   ../initramfs/bin/mount
-cp ./bin/umount.i386  ../initramfs/bin/umount
-cp ./bin/ls.i386      ../initramfs/bin/ls
+cp bin/init.i386    ../initramfs/bin/init
+cp bin/shell.i386   ../initramfs/bin/shell
+cp bin/cat.i386     ../initramfs/bin/cat
+cp bin/mount.i386   ../initramfs/bin/mount
+cp bin/ls.i386      ../initramfs/bin/ls
 
-cp ./bin/cd.i386      ../diskfs/bin/cd
-cp ./bin/pitch.i386   ../diskfs/bin/pitch
-cp ./bin/ping.i386    ../diskfs/bin/ping
-cp ./bin/insmod.i386  ../diskfs/bin/insmod
-cp ./bin/mkdir.i386   ../diskfs/bin/mkdir
-cp ./bin/ln.i386      ../diskfs/bin/ln
-cp ./bin/cp.i386      ../diskfs/bin/cp
-cp ./bin/install.i386 ../diskfs/install
+cp bin/umount.i386  ../diskfs/bin/umount
+cp bin/cd.i386      ../diskfs/bin/cd
+cp bin/pitch.i386   ../diskfs/bin/pitch
+cp bin/ping.i386    ../diskfs/bin/ping
+cp bin/insmod.i386  ../diskfs/bin/insmod
+cp bin/mkdir.i386   ../diskfs/bin/mkdir
+cp bin/ln.i386      ../diskfs/bin/ln
+cp bin/cp.i386      ../diskfs/bin/cp
+cp bin/install.i386 ../diskfs/install
 
 # Symlinking
 cd ../initramfs/
