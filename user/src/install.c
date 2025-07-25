@@ -13,9 +13,7 @@ argc[1] = operation (mod,diskln,help)
 
 const char * prgList[] = {
     "cd", "pitch", "ping", "insmod",
-    "mkswap", "ln", "cp", "ifconfig",
-    "udhcpc", "route", "fdisk", "wget",
-    "mkfs.ext2", "mkdir"
+    "ln", "cp", "mkdir"
 };
 
 int main(int argc, char *argv[]) {

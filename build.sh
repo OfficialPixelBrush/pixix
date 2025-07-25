@@ -65,13 +65,13 @@ cd ../..
 # Symlinks to make using busybox easier
 echo "Setting up symlinks..."
 cd diskfs
-ln -s ./bin/busybox ./bin/ifconfig
-ln -s ./bin/busybox ./bin/udhcpc
-ln -s ./bin/busybox ./bin/route
-ln -s ./bin/busybox ./bin/fdisk
-ln -s ./bin/busybox ./bin/mkfs.ext2
-ln -s ./bin/busybox ./bin/mkswap
-ln -s ./bin/busybox ./bin/wget
+ln -s bin/busybox ./ifconfig
+ln -s bin/busybox ./udhcpc
+ln -s bin/busybox ./route
+ln -s bin/busybox ./fdisk
+ln -s bin/busybox ./mkfs.ext2
+ln -s bin/busybox ./mkswap
+ln -s bin/busybox ./wget
 cd ..
 
 # Make into init.cpio
