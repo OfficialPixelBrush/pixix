@@ -12,10 +12,10 @@ argc[1] = operation (mod,diskln,help)
 */
 
 const char * prgList[] = {
-    "bin/cd", "bin/pitch", "bin/ping", "bin/insmod",
-    "mkswap", "bin/ln", "bin/cp", "ifconfig",
+    "cd", "pitch", "ping", "insmod",
+    "mkswap", "ln", "cp", "ifconfig",
     "udhcpc", "route", "fdisk", "wget",
-    "mkfs.ext2", "bin/mkdir"
+    "mkfs.ext2", "mkdir"
 };
 
 int main(int argc, char *argv[]) {
@@ -25,15 +25,18 @@ int main(int argc, char *argv[]) {
         sys_write(STDOUT, "Too few arguments!\n", 19);
         sys_exit(1);
     }
-    /*
-    sys_write(STDOUT,pixix_logo,strlen(pixix_logo));
-    sys_write(STDOUT,"\x1b[0m\n",5);
-    */
+    size_t n = sizeof(pixix_logo) / sizeof(pixix_logo[0]);
+    for (int i = 0; i < n; i++) {
+        if (i < n) {
+            sys_write(STDOUT,pixix_logo[i],strlen(pixix_logo[i]));
+            sys_write(STDOUT,"\x1b[0m ",6);
+        }
+    }
     //if (strcmp(args[1],"ln")) {
     int prgCount = sizeof(prgList) / sizeof(prgList[0]);
     for (int i = 0; i < prgCount; i++) {
         size_t src_alloc_size;
-        char *src = strcat("/mnt/", prgList[i], &src_alloc_size);
+        char *src = strcat("/mnt/bin/", prgList[i], &src_alloc_size);
         if (!src) sys_exit(1);
 
         size_t dest_alloc_size;

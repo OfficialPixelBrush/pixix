@@ -1,6 +1,8 @@
 #include "lib/sys.h"
 #include "lib/num.h"
 #include "lib/str.h"
+#include "img/pixix.h"
+#include "lib/err.h"
 
 struct utsname {
     char sysname[65];
@@ -28,69 +30,196 @@ struct sysinfo {
                             /* Padding to 64 bytes */
 };
 
+int cpuid_procinfo() {
+    int eax;
+    __asm__ __volatile__(
+        "cpuid"
+        : "=a"(eax)
+        : "a"(1)
+    );
+    return eax;
+}
+
+// This WILL implode on a pre-pentium machine
+void cpuid_vendor(char *vendor) {
+    int eax, ebx, ecx, edx;
+    __asm__ __volatile__(
+        "cpuid"
+        : "=a"(eax), "=b"(ebx), "=c"(ecx), "=d"(edx)
+        : "a"(0)
+    );
+
+    // Vendor string is stored in EBX, EDX, ECX (in this order)
+    *(int *)(vendor + 0) = ebx;
+    *(int *)(vendor + 4) = edx;
+    *(int *)(vendor + 8) = ecx;
+    vendor[12] = '\0';
+}
+
+static inline char has_cpuid(void) {
+    int eflags;
+    int mod_eflags;
+
+    __asm__ __volatile__(
+        "pushfl\n\t"
+        "popl %0\n\t"            // Save original EFLAGS
+        "movl %0, %1\n\t"
+        "xorl $0x200000, %1\n\t" // Toggle ID bit (bit 21)
+        "pushl %1\n\t"
+        "popfl\n\t"
+        "pushfl\n\t"
+        "popl %1\n\t"            // Read back EFLAGS
+        "pushl %0\n\t"
+        "popfl\n\t"              // Restore original EFLAGS
+        : "=&r"(eflags), "=&r"(mod_eflags)
+        :
+        : "cc"
+    );
+
+    return ((eflags ^ mod_eflags) & 0x200000) != 0;
+}
+
+// Just makes this easier
+// Also, default to Intel
+int vendorStringToId(char* vendor) {
+    if (strcmp(vendor,"GenuineIntel") == 0) {
+        return 0;
+    }
+    if (strcmp(vendor,"AuthenticAMD") == 0) {
+        return 1;
+    }
+    return 0;
+}
+
+void printCpuModel(int vendor_id, int processor_info) {
+    int familyId = (processor_info >> 8) & 0xF;
+    if (vendor_id == 1) {
+        switch(familyId) {
+            case 0x4:
+                sys_write(STDOUT,"Am486",5);
+                break;
+            case 0x5:
+                sys_write(STDOUT,"K5/K6",5);
+                break;
+            case 0x6:
+                sys_write(STDOUT,"K7/Athlon",9);
+                break;
+            default:
+                printint(familyId);
+        }
+    // Default to Intel
+    } else {
+        switch(familyId) {
+            case 0x4:
+                sys_write(STDOUT,"486",3);
+                break;
+            case 0x5:
+                sys_write(STDOUT,"Pentium",7);
+                break;
+            case 0x6:
+                sys_write(STDOUT,"Pentium II or later",19);
+                break;
+            default:
+                printint(familyId);
+        }
+    }
+}
+
 void _start() {
     struct utsname uts;
-    sys_write(STDOUT,"\n",1);
-    if(sys_uname(&uts) == 0) {
-        sys_write(STDOUT,uts.nodename,65);
-        sys_write(STDOUT,"\n",1);
-        for (int i = 0; i < strlen(uts.nodename); i++) {
-            sys_write(STDOUT,"-",1);
-        }
-        sys_write(STDOUT,"\nKernel:\t",9);
-        sys_write(STDOUT,uts.sysname,65);
-        sys_write(STDOUT," ",1);
-        sys_write(STDOUT,uts.release,65);
-        sys_write(STDOUT,"\nArch:\t",7);
-        sys_write(STDOUT,uts.machine,65);
+    struct sysinfo info;
+    printerr(sys_uname(&uts));
+    printerr(sys_sysinfo(&info));
+
+    char vendor[13] = "NoCpuidInst";
+    int vendor_id = 0;
+    int processor_info = 0;
+    if (has_cpuid) {
+        cpuid_vendor(vendor);
+        vendor_id = vendorStringToId(vendor);
+        processor_info = cpuid_procinfo();
     }
 
-    struct sysinfo info;
-    if (sys_sysinfo(&info) == 0) {
-        if (info.totalram) {
-            sys_write(STDOUT,"\nRAM:\t[",7);
-            float freeRam = (float)info.freeram/(float)info.totalram;
-            for (float i = 1.0; i > 0.0; i-=0.05) {
-                if (i <= freeRam) {
+    size_t n = sizeof(pixix_logo) / sizeof(pixix_logo[0]);
+    for (int i = 0; i < n; i++) {
+        if (i < n) {
+            sys_write(STDOUT,pixix_logo[i],strlen(pixix_logo[i]));
+            sys_write(STDOUT,"\x1b[0m ",6);
+        }
+        switch(i) {
+            case 0:
+                sys_write(STDOUT,uts.nodename,65);
+                break;
+            case 1:
+                for (int i = 0; i < strlen(uts.nodename); i++) {
                     sys_write(STDOUT,"-",1);
-                } else {
-                    sys_write(STDOUT,"#",1);
                 }
-            }
-            sys_write(STDOUT,"] ",2);
-            printint((info.totalram-info.freeram)/1024);
-            sys_write(STDOUT," / ",3);
-            printint(info.totalram/1024);
-            sys_write(STDOUT," KiB",4);
-        }
-        
-        if (info.totalswap) {
-            sys_write(STDOUT,"\nSwap:\t[",8);
-            float freeSwap = (float)info.freeswap/(float)info.totalswap;
-            for (float i = 1.0; i > 0.0; i-=0.05) {
-                if (i <= freeSwap) {
-                    sys_write(STDOUT,"-",1);
-                } else {
-                    sys_write(STDOUT,"#",1);
+                break;
+            case 2:
+                sys_write(STDOUT,"Kernel:\t",9);
+                sys_write(STDOUT,uts.sysname,65);
+                sys_write(STDOUT," ",1);
+                sys_write(STDOUT,uts.release,65);
+                break;
+            case 3:
+                sys_write(STDOUT,"CPU:\t",5);
+                sys_write(STDOUT,vendor,12);
+                //printhex(processor_info);
+                sys_write(STDOUT," ",1);
+                printCpuModel(vendor_id, processor_info);
+                sys_write(STDOUT," (",2);
+                sys_write(STDOUT,uts.machine,65);
+                sys_write(STDOUT,")",1);
+                break;
+            case 4:
+                if (info.totalram) {
+                    sys_write(STDOUT,"RAM:\t[",7);
+                    float freeRam = (float)info.freeram/(float)info.totalram;
+                    for (float i = 1.0; i > 0.0; i-=0.05) {
+                        if (i <= freeRam) {
+                            sys_write(STDOUT,"-",1);
+                        } else {
+                            sys_write(STDOUT,"#",1);
+                        }
+                    }
+                    sys_write(STDOUT,"] ",2);
+                    printint((info.totalram-info.freeram)/1024);
+                    sys_write(STDOUT," / ",3);
+                    printint(info.totalram/1024);
+                    sys_write(STDOUT," KiB",4);
                 }
-            }
-            sys_write(STDOUT,"] ",2);
-            printint((info.totalswap-info.freeswap)/1024);
-            sys_write(STDOUT," / ",3);
-            printint(info.totalswap/1024);
-            sys_write(STDOUT," KiB",4);
+                break;
+            case 5:
+                if (info.totalswap) {
+                    sys_write(STDOUT,"Swap:\t[",8);
+                    float freeSwap = (float)info.freeswap/(float)info.totalswap;
+                    for (float i = 1.0; i > 0.0; i-=0.05) {
+                        if (i <= freeSwap) {
+                            sys_write(STDOUT,"-",1);
+                        } else {
+                            sys_write(STDOUT,"#",1);
+                        }
+                    }
+                    sys_write(STDOUT,"] ",2);
+                    printint((info.totalswap-info.freeswap)/1024);
+                    sys_write(STDOUT," / ",3);
+                    printint(info.totalswap/1024);
+                    sys_write(STDOUT," KiB",4);
+                }
+                break;
+            case 6:
+                if (info.uptime) {
+                    sys_write(STDOUT,"Uptime:\t",9);
+                    printint(info.uptime/60/60);
+                    sys_write(STDOUT,"h ",2);
+                    printint(info.uptime/60%60);
+                    sys_write(STDOUT,"min ",4);
+                    printint(info.uptime%60);
+                    sys_write(STDOUT,"s",1);
+                }
+                break;
         }
-        
-        if (info.uptime) {
-            sys_write(STDOUT,"\nUptime:\t[",9);
-            printint(info.uptime/60/60);
-            sys_write(STDOUT,"h ",2);
-            printint(info.uptime/60%60);
-            sys_write(STDOUT,"min ",4);
-            printint(info.uptime%60);
-            sys_write(STDOUT,"s",1);
-        }
+        sys_write(STDOUT,"\n",1);
     }
-    sys_write(STDOUT,"\n",1);
     sys_exit(0);
 }
