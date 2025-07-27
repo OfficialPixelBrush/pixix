@@ -10,7 +10,7 @@ except that my target was an i386 system with 32MB of RAM.
 - CD-ROM Drive
 - 22 Megabytes of RAM
 - i386 (for pixix applications)
-- i686 (e.g. Pentium Pro or later, for busybox applications)
+- i686 (e.g. Pentium Pro or later, for busybox applications and limine)
 
 ### How to run
 Just execute all.sh. This'll clone the necessary files into the repo.
@@ -36,7 +36,7 @@ init shell cat mount umount ls
 
 ### Available on the disk
 ```
-ping pitch cp fdisk* ifconfig* mkfs.ext2* route* udhcpc* wget*
+ping pitch cp limine fdisk* ifconfig* mkfs.ext2* route* udhcpc* wget* mkswap* mkfatfs*
 ```
 *\* these are handled by busybox*
 
