@@ -1,4 +1,5 @@
 #include "lib/sys.h"
+#include "lib/err.h"
 
 #define COMMAND_MAX_LENGTH 256
 #define COMMAND_MAX_ARGS 10
@@ -38,7 +39,7 @@ void _start() {
             }
             argv[argc] = 0;  // argv must be NULL-terminated
 
-            sys_execve(command, argv, 0);
+            printerr(sys_execve(command, argv, 0));
 
             // If execve returns, it failed
             sys_write(STDOUT, "Command does not exist!\n", 24);

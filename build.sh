@@ -53,14 +53,17 @@ strip busybox
 cp busybox ../diskfs/bin/busybox
 cd ..
 
-# Grub setup
-echo "Setting up grub..."
-cd grub
-cd build
-make -s -j$(nproc)
-cp grub-install ../../diskfs/
-cp grub-mkconfig ../../diskfs/
-cd ../..
+# Syslinux setup
+echo "Setting up limine..."
+cd limine
+./configure --enable-bios CFLAGS_FOR_TARGET="-march=$TARGET_ARCH -m32 -Os -static" LDFLAGS_FOR_TARGET="-march=$TARGET_ARCH -m32 -static"
+make -j$(nproc) \
+  CFLAGS="-march=$TARGET_ARCH -Os -m32 -static" \
+  LDFLAGS="-march=$TARGET_ARCH -Os -m32 -static"
+cp bin/limine  ../diskfs/
+cp bin/limine-bios.sys  ../diskfs/
+cp bin/limine-bios-hdd.bin  ../diskfs/
+cd ..
 
 # Symlinks to make using busybox easier
 echo "Setting up symlinks..."
@@ -70,8 +73,10 @@ ln -s bin/busybox ./udhcpc
 ln -s bin/busybox ./route
 ln -s bin/busybox ./fdisk
 ln -s bin/busybox ./mkfs.ext2
+ln -s bin/busybox ./mkdosfs
 ln -s bin/busybox ./mkswap
 ln -s bin/busybox ./wget
+#ln -s bin/busybox ./cp
 cd ..
 
 # Make into init.cpio
