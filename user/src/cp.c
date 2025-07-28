@@ -1,4 +1,5 @@
 #include "lib/sys.h"
+#include "lib/cp.h"
 
 #define BUF_SIZE 4096
 
@@ -9,20 +10,6 @@ int main(int argc, char *argv[]) {
         sys_write(STDOUT, "Not enough arguments!\n", 22);
         sys_exit(1);
     }
-
-    int src = sys_open(args[1], O_RDONLY, 0755);
-    if (src < 0) sys_exit(1);
-
-    int dst = sys_open(args[2], O_WRONLY | O_CREAT | O_TRUNC, 0755);
-    if (dst < 0) sys_exit(1);
-
-    char buffer[BUF_SIZE];
-    ssize_t bytes;
-    while ((bytes = sys_read(src, buffer, BUF_SIZE)) > 0) {
-        sys_write(dst, buffer, bytes);
-    }
-
-    sys_close(src);
-    sys_close(dst);
+    copy(args[1],args[2]);
     sys_exit(0);
 }

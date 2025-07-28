@@ -1,6 +1,6 @@
 GET_NANO=false
 GET_BUSYBOX=true
-GET_LIMINE=true
+GET_GRUB=true
 
 # Install Dependencies
 echo "Installing Dependencies..."
@@ -33,10 +33,10 @@ if [ "$GET_BUSYBOX" = true ]; then
     cd ..
 fi
 
-if [ "$GET_LIMINE" = true ]; then
-    echo "Cloning Limine..."
-    git clone --depth=1 https://github.com/limine-bootloader/limine.git
-    cd limine
+if [ "$GET_GRUB" = true ]; then
+    echo "Cloning Grub..."
+    git clone --depth=1 https://git.savannah.gnu.org/git/grub.git
+    cd grub
     git pull
     ./bootstrap
     cd ..
