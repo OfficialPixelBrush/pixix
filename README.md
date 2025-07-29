@@ -10,7 +10,7 @@ except that my target was an i386 system with 32MB of RAM.
 - CD-ROM Drive
 - 22 Megabytes of RAM
 - i386 (for pixix applications)
-- i686 (e.g. Pentium Pro or later, for busybox applications and limine)
+- i686 (e.g. Pentium Pro or later, for busybox applications)
 
 ### How to run
 Just execute all.sh. This'll clone the necessary files into the repo.
@@ -31,12 +31,14 @@ All of this was tested on Linux Mint 22.1, so modify `setup.sh` for whatever dis
 ## Applications
 ### Available in the initramfs
 ```
-init shell cat mount umount ls
+cat init ls mount shell
 ```
 
 ### Available on the disk
 ```
-ping pitch cp limine fdisk* ifconfig* mkfs.ext2* route* udhcpc* wget* mkswap* mkfatfs*
+cd cp insmod irc ln mkdir ping pitch umount install
+fdisk* grub-install grub-mkconfig ifconfig*
+mkdosfs* mkfs.ext2* mkswap* route* udhcpc* wget*
 ```
 *\* these are handled by busybox*
 
