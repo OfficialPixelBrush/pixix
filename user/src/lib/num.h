@@ -1,5 +1,6 @@
 // Helper library for numbers
 #include "sys.h"
+#include "str.h"
 
 #define MAX_NUMBER_CHARACTER 100000000
 
@@ -129,6 +130,50 @@ int readoct(const char* p) {
         ++p;
     }
     return result;
+}
+
+int readint(const char* p) {
+    int result = 0;
+    while (*p) {
+        if (*p < '0' || *p > '9') {
+            break;
+        }
+        result = (result * 10) + (*p - '0');
+        ++p;
+    }
+    return result;
+}
+
+int readip(char* p) {
+    // There are 3 dots in an IPv4 IP, so 3 offsets
+    // 0th index will always be 0
+    int offset [4] = {0};
+    int currentOffset = 1;
+    int ipFragments[4];
+    int ipLength = strlen(p);
+    for (int i = 0; i < ipLength; i++) {
+        if (p[i]=='.') {
+            // Replace . with NULL so readint stops reading
+            p[i]='\0';
+            // Start of next number is after dot
+            offset[currentOffset] = i+1;
+            currentOffset++;
+        }
+    }
+    for (int i = 0; i < 4; i++) {
+        ipFragments[i] = readint(p+offset[i]);
+    }
+    return (ipFragments[0] << 24) | (ipFragments[1] << 16) | (ipFragments[2] << 8) | (ipFragments[3]);
+}
+
+void printip(int ip) {
+    printint(ip >> 24 & 0xFF);
+    sys_write(STDOUT,".",1);
+    printint(ip >> 16 & 0xFF);
+    sys_write(STDOUT,".",1);
+    printint(ip >> 8 & 0xFF);
+    sys_write(STDOUT,".",1);
+    printint(ip & 0xFF);
 }
 
 #endif

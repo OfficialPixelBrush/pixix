@@ -34,6 +34,7 @@ cp bin/insmod.i386  ../diskfs/bin/insmod
 cp bin/mkdir.i386   ../diskfs/bin/mkdir
 cp bin/ln.i386      ../diskfs/bin/ln
 cp bin/cp.i386      ../diskfs/bin/cp
+cp bin/irc.i386      ../diskfs/bin/irc
 cp bin/install.i386 ../diskfs/install
 
 # Symlinking
@@ -41,7 +42,6 @@ cd ../initramfs/
 ln -s bin/init init
 ln -s bin/cat cat
 ln -s bin/mount mount
-ln -s bin/umount umount
 ln -s bin/ls ls
 cd ..
 
@@ -78,9 +78,10 @@ cp grub-install ../../diskfs
 cp grub-mkconfig ../../diskfs
 grub-mkimage -O i386-pc -o core.img -p /boot/grub/i386-pc part_msdos ext2 normal multiboot linux configfile
 cp core.img ../../diskfs
-cp grub-core/modinfo.sh ../../diskfs/grubmod/
-cp grub-core/moddep.lst ../../diskfs/grubmod/
-find . -name "*.mod" -exec cp {} ../../diskfs/grubmod/ \;
+find grub-core/ -maxdepth 1 -type f -exec cp {} ../../diskfs/grubmod/ \;
+#cp grub-core/modinfo.sh ../../diskfs/grubmod/
+#cp grub-core/moddep.lst ../../diskfs/grubmod/
+#find . -name "*.mod" -exec cp {} ../../diskfs/grubmod/ \;
 cd ../..
 
 # Symlinks to make using busybox easier

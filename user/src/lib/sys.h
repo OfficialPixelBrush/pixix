@@ -12,6 +12,9 @@
 
 #define TIOCSPGRP 0x5410
 
+#define F_GETFL		3
+#define F_SETFL		4
+
 enum OC_ACCESS {
     O_ACCMODE   = 0003,
     O_RDONLY    = 00,
@@ -103,6 +106,7 @@ int sys_mount(const char *source, const char *target, const char *filesystemtype
 int sys_umount(const char *source);
 int sys_mkdir(const char *name, int mode);
 int sys_ioctl(unsigned int fd, int request, const void *argp);
+int sys_fcntl(unsigned int fd, int request, int flags);
 int sys_setpgid(unsigned int pid, unsigned int pgid);
 int sys_setsid();
 int sys_symlink(const char *oldpath, const char *newpath);

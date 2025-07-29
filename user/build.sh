@@ -71,5 +71,9 @@ gcc $ARGS_GCC install.c
 ld $ARGS_LD -o install.i386 install.o asm/crt.lib asm/sys.lib asm/mem.lib
 objcopy $ARGS_OBJCOPY install.i386
 
+gcc $ARGS_GCC irc.c
+ld $ARGS_LD -o irc.i386 irc.o asm/crt.lib asm/sys.lib asm/net.lib
+objcopy $ARGS_OBJCOPY irc.i386
+
 mv *.i386 ../bin
 cd ..

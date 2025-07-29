@@ -22,4 +22,11 @@ int strcmp(const char* a, const char* b) {
     }
     return *(const unsigned char*)a - *(const unsigned char*)b;
 }
+
+int memcpy(char* dest, const char* src, size_t length) {
+    for (size_t i = 0; i < length; i++) {
+        dest[i] = src[i];
+    }
+    return 0;
+}
 #endif

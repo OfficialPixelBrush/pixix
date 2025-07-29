@@ -4,24 +4,35 @@
 #include "lib/net.h"
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        sys_write(STDOUT, "Not enough arguments!\n", 22);
+    char **args = argv;
+    int argcount = argc;
+    int port = 80;
+    if (argcount < 2) {
+        sys_write(STDOUT, "ping <ip> (port)\n", 17);
         sys_exit(1);
+    } else if (argcount >= 3) {
+        port = readint(args[2]);
     }
-    int ip = readhex(argv[1]);
+    int ip = readip(args[1]);
     int sock = sys_socket(AF_INET,SOCK_STREAM,0);
     if (sock < 0) printerr(sock);
 
     struct sockaddr_in addr = {
         .sin_family = AF_INET,
         .sin_addr = htonl(ip),
-        .sin_port = htons(80)
+        .sin_port = htons(port)
     };
     
-    sys_write(STDOUT, "Connecting...\n", 14);
+    sys_write(STDOUT, "Connecting to ", 14);
+    printip(ip);
+    sys_write(STDOUT, ":",1);
+    printint(port);
+    sys_write(STDOUT, "...\n",4);
     printerr(sys_connect(sock, &addr, sizeof(addr)));
-    sys_write(STDOUT, "Connected to 0x", 15);
-    printhex(ip);
+    sys_write(STDOUT, "Connected to ", 13);
+    printip(ip);
+    sys_write(STDOUT, ":",1);
+    printint(port);
     sys_write(STDOUT, "!\n",2);
 
     char *request = "GET / HTTP/1.1\r\nHost: 1.1.1.1\r\n\r\n";

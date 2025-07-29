@@ -14,6 +14,7 @@
 .global sys_umount
 .global sys_mkdir
 .global sys_ioctl
+.global sys_fcntl
 .global sys_setpgid
 .global sys_setsid
 .global sys_symlink
@@ -121,6 +122,14 @@ sys_ioctl:
     mov ecx, [esp + 8]
     mov edx, [esp + 12]
     mov eax, 54
+    int 0x80
+    ret
+
+sys_fcntl:
+    mov ebx, [esp + 4]
+    mov ecx, [esp + 8]
+    mov edx, [esp + 12]
+    mov eax, 55
     int 0x80
     ret
 

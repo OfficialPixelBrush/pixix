@@ -8,8 +8,8 @@
 #include "lib/cp.h"
 
 const char * prgList[] = {
-    "cd", "pitch", "ping", "insmod",
-    "ln", "cp", "mkdir"
+    "umount", "cd", "pitch", "ping",
+    "insmod", "mkdir", "ln", "cp", "irc"
 };
 
 const char * modList[] = {
