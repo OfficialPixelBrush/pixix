@@ -197,23 +197,27 @@ void _start() {
                 break;
             case 4:
                 if (info.totalram) {
+                    int totalRam = (int)((double)info.totalram * ((double)info.mem_unit / (1024.0)));
+                    int freeRam  = (int)((double)info.freeram  * ((double)info.mem_unit / (1024.0)));
                     sys_write(STDOUT,"RAM:\t",5);
-                    printbar((float)info.freeram,(float)info.totalram,10.0f);
+                    printbar((float)freeRam,(float)totalRam,10.0f);
                     sys_write(STDOUT," ",1);
-                    printfix((info.totalram-info.freeram)/1024,1000,2);
+                    printfix(totalRam-freeRam,1000,2);
                     sys_write(STDOUT," / ",3);
-                    printfix(info.totalram/1024,1000,2);
+                    printfix(totalRam,1000,2);
                     sys_write(STDOUT," MiB",4);
                 }
                 break;
             case 5:
                 if (info.totalswap) {
+                    int totalSwap = (int)((double)info.totalram * ((double)info.mem_unit / (1024.0)));
+                    int freeSwap  = (int)((double)info.freeram  * ((double)info.mem_unit / (1024.0)));
                     sys_write(STDOUT,"Swap:\t",6);
-                    printbar((float)info.freeswap,(float)info.totalswap,10.0f);
+                    printbar((float)freeSwap,(float)totalSwap,10.0f);
                     sys_write(STDOUT," ",1);
-                    printfix((info.totalswap-info.freeswap)/1024,1000,2);
+                    printfix((totalSwap-freeSwap)/1000,1000,2);
                     sys_write(STDOUT," / ",3);
-                    printfix(info.totalswap/1024,1000,2);
+                    printfix(totalSwap/1000,100,2);
                     sys_write(STDOUT," MiB",4);
                 }
                 break;
