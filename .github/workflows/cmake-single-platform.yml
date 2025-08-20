@@ -27,19 +27,23 @@ jobs:
       with:
         submodules: true  # Fetch submodules
         fetch-depth: 0  # Fetch full commit history
+    - name: List
+      run: |
+          ls -la
 
     - name: Run setup.sh
-      id: setup_run
       run: |
-        setup.sh
+        chmod +x ./setup.sh
+        ./setup.sh
         
     - name: Run build.sh
       # Build your program with the given configuration
       run: |
-        build.sh
+        chmod +x ./build.sh
+        ./build.sh
 
-    - name: Extract Version from CMakeLists.txt
-      id: extract_version
+    - name: Set Date String
+      id: extract_date
       run: |
         DATE=$(date +%d-%b-%Y)
         echo "DATE=$DATE"
