@@ -53,8 +53,8 @@ jobs:
       if: ${{ matrix.os == 'ubuntu-latest' }}  # Only first OS creates the release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v${{ env.date }}
-        name: v${{ env.date }}
+        tag_name: ${{ env.date }}
+        name: Pixix-${{ env.date }}
         body: ${{ env.MESSAGE }}
         draft: false
         prerelease: false
@@ -64,8 +64,8 @@ jobs:
     - name: Upload Release Asset
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: v${{ env.date }}
-        files: ${{ env.package }}
+        tag_name: ${{ env.date }}
+        files: pixix.iso
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
