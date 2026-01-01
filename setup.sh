@@ -4,7 +4,27 @@ GET_GRUB=true
 
 # Install Dependencies
 echo "Installing Dependencies..."
-apt install isolinux flex bison bc genisoimage libc6-dev-i386
+if command -v apt >/dev/null 2>&1; then
+    apt update
+    apt install -y \
+        isolinux \
+        flex \
+        bison \
+        bc \
+        genisoimage \
+        libc6-dev-i386
+elif command -v dnf >/dev/null 2>&1; then
+    dnf install -y \
+        syslinux \
+        flex \
+        bison \
+        bc \
+        genisoimage \
+        glibc-devel.i686
+else
+    echo "Unsupported distribution"
+    exit 1
+fi
 
 # Download necessary code
 echo "Cloning latest kernel..."

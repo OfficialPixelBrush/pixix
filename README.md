@@ -1,14 +1,14 @@
 # Pixix
-A hyper-minimal Linux Distro for i386 and above.
+A hyper-minimal Linux Distro for i386/i586 and above.
 
 <img style="min-width: 100px; image-rendering: pixelated" src="images/pixix.png">
 
 A good chunk of this was copied/inspired by [Making Smallest Possible Linux Distro (x64) by Nir Lichtman](https://www.youtube.com/watch?v=u2Juz5sQyYQ),
-except that my target was an i386 system with 32MB of RAM.
+except that my target was an i386/i586 system with 32MB of RAM.
 
 ### Minimum requirements
 - CD-ROM Drive
-- 22 Megabytes of RAM
+- 23 Megabytes of RAM
 - i386 (for pixix applications)
 - i686 (e.g. Pentium Pro or later, for busybox applications)
 
@@ -26,7 +26,7 @@ If you'd like to run the commands separately, just execute the following in what
 
 - `./build.sh` is for compiling everything into a usable .iso file
 
-All of this was tested on Linux Mint 22.1, so modify `setup.sh` for whatever distro you may be running.
+All of this was tested on Linux Mint 22.1 and Fedora 43, so modify `setup.sh` for whatever distro you may be running.
 
 ## Applications
 ### Available in the initramfs

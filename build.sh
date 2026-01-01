@@ -1,5 +1,8 @@
 TARGET_ARCH="i386"
 DATE=$(date +%d-%b-%Y)
+INSTALL_GRUB=false
+
+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 
 rm -rf initramfs diskfs
 
@@ -56,33 +59,35 @@ cp busybox ../diskfs/bin/busybox
 cd ..
 
 # Grub setup
-echo "Setting up grub..."
-cd grub
-mkdir build
-cd build
-CFLAGS="-m32 -static" CXXFLAGS="-m32 -static" ../configure \
-  --target=i386 \
-  --with-platform=pc \
-  --disable-werror \
-  --disable-efiemu \
-  --disable-nls \
-  --disable-grub-mkfont \
-  --disable-device-mapper \
-  --disable-gtk \
-  --disable-uboot \
-  --disable-libzfs \
-  --enable-grub-mkrescue=no
-make -s -j$(nproc)
-#./grub-mkimage -O i386-pc -o core.img -p /boot/grub -d ./grub-core/ part_msdos ext2 normal multiboot linux 
-cp grub-install ../../diskfs
-cp grub-mkconfig ../../diskfs
-grub-mkimage -O i386-pc -o core.img -p /boot/grub/i386-pc part_msdos ext2 normal multiboot linux configfile
-cp core.img ../../diskfs
-find grub-core/ -maxdepth 1 -type f -exec cp {} ../../diskfs/grubmod/ \;
-#cp grub-core/modinfo.sh ../../diskfs/grubmod/
-#cp grub-core/moddep.lst ../../diskfs/grubmod/
-#find . -name "*.mod" -exec cp {} ../../diskfs/grubmod/ \;
-cd ../..
+if [ "$INSTALL_GRUB" = true ]; then
+  echo "Setting up grub..."
+  cd grub
+  mkdir build
+  cd build
+  CFLAGS="-m32 -static -Os" CXXFLAGS="-m32 -static -Os" ../configure \
+    --target=i386 \
+    --with-platform=pc \
+    --disable-werror \
+    --disable-efiemu \
+    --disable-nls \
+    --disable-grub-mkfont \
+    --disable-device-mapper \
+    --disable-gtk \
+    --disable-uboot \
+    --disable-libzfs \
+    --enable-grub-mkrescue=no
+  make -s -j$(nproc)
+  #./grub-mkimage -O i386-pc -o core.img -p /boot/grub -d ./grub-core/ part_msdos ext2 normal multiboot linux 
+  cp grub-install ../../diskfs
+  cp grub-mkconfig ../../diskfs
+  grub-mkimage -O i386-pc -o core.img -p /boot/grub/i386-pc part_msdos ext2 normal multiboot linux configfile
+  cp core.img ../../diskfs
+  find grub-core/ -maxdepth 1 -type f -exec cp {} ../../diskfs/grubmod/ \;
+  #cp grub-core/modinfo.sh ../../diskfs/grubmod/
+  #cp grub-core/moddep.lst ../../diskfs/grubmod/
+  #find . -name "*.mod" -exec cp {} ../../diskfs/grubmod/ \;
+  cd ../..
+fi
 
 # Symlinks to make using busybox easier
 echo "Setting up symlinks..."
@@ -113,12 +118,12 @@ cp -u ../isolinux.bin arch/x86/boot/
 cp -u ../kernel.config .config
 # Dunno why this doesn't work :p
 export LOCALVERSION="-pixix_$DATE"
-make ARCH=i386 KCFLAGS="-march=$TARGET_ARCH" -j"$(nproc)"
+make CFLAGS="-Os" ARCH=i386 KCFLAGS="-march=$TARGET_ARCH" -j"$(nproc)"
 
 find . -name "*.ko" -exec cp --parents {} ../diskfs/mod/ \;
 
 # Prepare ISO image
-make isoimage ARCH=i386 -j"$(nproc)" \
+make isoimage ARCH=i386 V=1 -j"$(nproc)" \
   KCFLAGS="-march=$TARGET_ARCH" \
   FDARGS="initrd=/init.cpio init=/init" \
   FDINITRD="../init.cpio"
