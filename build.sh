@@ -4,7 +4,8 @@ INSTALL_GRUB=false
 INSTALL_TCC=true
 INSTALL_VIM=true
 INSTALL_NANO=false
-REBUILT_KERNEL=false
+ADD_CPROGS=true
+REBUILD_KERNEL=false
 
 export PATH="$HOME/musl-cross-make-output/bin:$PATH"
 export CC=i386-linux-musl-gcc
@@ -135,6 +136,16 @@ if [ "$INSTALL_TCC" = true ]; then
   cd ..
 fi
 
+if [ "$ADD_CPROGS" = true ]; then
+  mkdir diskfs/src
+  cp cprogs/* diskfs/src/
+  # Compile all C files in cprogs/
+  for src in cprogs/*.c; do
+    filename=$(basename "$src" .c)
+    i386-linux-musl-gcc -m32 -static "$src" -o "diskfs/src/$filename"
+  done
+fi
+
 # Grub setup
 if [ "$INSTALL_GRUB" = true ]; then
   echo "Setting up grub..."
@@ -191,7 +202,7 @@ echo "Building kernel and ISO..."
 cd linux
 
 # Configure and build the kernel
-if [ "$REBUILT_KERNEL" = true ]; then
+if [ "$REBUILD_KERNEL" = true ]; then
   cp -u ../isolinux.bin arch/x86/boot/
   cp -u ../kernel.config .config
   # Dunno why this doesn't work :p
