@@ -66,6 +66,17 @@ int main(int argc, char *argv[]) {
             printerr(sys_munmap(src, dest_alloc_size));
         }
     }
+    // Init compiler related things
+    if (strcmp(args[1],"code")==0) {
+        sys_symlink("/mnt/bin/vim", "vim");
+        sys_symlink("/mnt/bin/tcc", "tcc");
+        printerr(sys_mkdir("/usr", 0755));
+        printerr(sys_mkdir("/usr/lib", 0755));
+        printerr(sys_symlink("/mnt/lib", "/usr/lib/i386-linux-gnu"));
+        printerr(sys_symlink("/mnt/include", "/usr/include"));
+        //sys_write(STDOUT,"/mnt/lib -> /usr/lib\n",21);
+        //sys_write(STDOUT,"/mnt/include -> /usr/include\n",29);
+    }
     // Init ext4 modules
     if (strcmp(args[1],"ext4")==0) {
         if (argcount < 3) {

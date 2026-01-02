@@ -109,7 +109,7 @@ int sys_ioctl(unsigned int fd, int request, const void *argp);
 int sys_fcntl(unsigned int fd, int request, int flags);
 int sys_setpgid(unsigned int pid, unsigned int pgid);
 int sys_setsid();
-int sys_symlink(const char *oldpath, const char *newpath);
+int sys_symlink(const char *source, const char *target);
 int sys_fstat(unsigned int fd, struct stat *statbuf);
 int sys_sysinfo(void *info);
 int sys_uname(void *buf);

@@ -57,7 +57,7 @@ int main() {
 	clock_t start_time = clock();
 	//for (int i = 0; i < 4; i++) {
 		for (float y = 2.0f; y > -2.0; y -= unit) {
-			for (float x = -2.0f; x < 2.0; x += unit) {
+			for (float x = -2.0f; x < 2.0; x += (unit*0.5f)) {
 				if (Mandeltest(x,y)) {
 					printf("*");
 				} else {

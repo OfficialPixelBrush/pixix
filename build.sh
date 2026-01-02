@@ -5,7 +5,7 @@ INSTALL_TCC=true
 INSTALL_VIM=true
 INSTALL_NANO=false
 ADD_CPROGS=true
-REBUILD_KERNEL=false
+REBUILD_KERNEL=true
 
 export PATH="$HOME/musl-cross-make-output/bin:$PATH"
 export CC=i386-linux-musl-gcc
@@ -131,7 +131,10 @@ if [ "$INSTALL_TCC" = true ]; then
   # Strip to reduce size
   i386-linux-musl-strip tcc
   #strip tcc
-  cp ~/musl-i386/lib/crt1.o ../diskfs/lib/crt1.o
+  mkdir -p ../diskfs/lib/ ../diskfs/include/
+  cp ~/musl-cross-make-output/i386-linux-musl/lib/* ../diskfs/lib/
+  cp -r ~/musl-cross-make-output/i386-linux-musl/include/* ../diskfs/include/
+  cp libtcc1.a ../diskfs/lib/
   cp tcc ../diskfs/bin/tcc
   cd ..
 fi
