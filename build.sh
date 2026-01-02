@@ -11,7 +11,7 @@ export PATH="$HOME/musl-cross-make-output/bin:$PATH"
 export CC=i386-linux-musl-gcc
 export AR=i386-linux-musl-ar
 export RANLIB=i386-linux-musl-ranlib
-export CFLAGS="-march=$TARGET_ARCH -m32 -static -mno-sse -Os -I$HOME/musl-i386-ncurses/include"
+export CFLAGS="-march=$TARGET_ARCH -m32 -static -mno-sse -O3 -I$HOME/musl-i386-ncurses/include"
 export LDFLAGS="-m32 -static -L$HOME/musl-i386-ncurses/lib"
 
 CONFIG_CC_OPTIMIZE_FOR_SIZE=y
@@ -132,7 +132,7 @@ if [ "$INSTALL_TCC" = true ]; then
   i386-linux-musl-strip tcc
   #strip tcc
   mkdir -p ../diskfs/lib/ ../diskfs/include/
-  cp ~/musl-cross-make-output/i386-linux-musl/lib/* ../diskfs/lib/
+  cp -r ~/musl-cross-make-output/i386-linux-musl/lib/* ../diskfs/lib/
   cp -r ~/musl-cross-make-output/i386-linux-musl/include/* ../diskfs/include/
   cp libtcc1.a ../diskfs/lib/
   cp tcc ../diskfs/bin/tcc
