@@ -15,3 +15,8 @@ pixix.iso
 /diskfs
 *.qcow2
 /grub
+/tinycc
+/ncurses-6.4
+*.exe
+musl-cross-make/
+vim/

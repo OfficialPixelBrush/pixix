@@ -1,6 +1,10 @@
-GET_NANO=false
+GET_NANO=true
+GET_VIM=false
+GET_NCURSES=true
 GET_BUSYBOX=true
-GET_GRUB=true
+GET_GRUB=false
+GET_TCC=true
+GET_MUSL=true
 
 # Install Dependencies
 echo "Installing Dependencies..."
@@ -37,10 +41,27 @@ cd ..
 echo "Copying kernel config..."
 cp kernel.config linux/.config
 
+if [ "$GET_NCURSES" = true ]; then
+    echo "Cloning ncurses..."
+    wget https://ftp.gnu.org/pub/gnu/ncurses/ncurses-6.4.tar.gz
+    tar xvf ncurses-6.4.tar.gz
+    cd ncurses-6.4
+    cd ..
+fi
+
 if [ "$GET_NANO" = true ]; then
     echo "Cloning nano..."
     git clone --depth=1 https://git.savannah.gnu.org/git/nano.git
     cd nano
+    ./autogen
+    git pull
+    cd ..
+fi
+
+if [ "$GET_VIM" = true ]; then
+    echo "Cloning vim..."
+    git clone --depth=1 https://github.com/vim/vim.git
+    cd vim
     git pull
     cd ..
 fi
@@ -61,3 +82,21 @@ if [ "$GET_GRUB" = true ]; then
     ./bootstrap
     cd ..
 fi
+
+if [ "$GET_TCC" = true ]; then
+    echo "Cloning Tiny C Compiler..."
+    git clone --depth=1 https://repo.or.cz/tinycc.git
+    cd tinycc
+    git pull
+    cd ..
+fi
+
+if [ "$GET_MUSL" = true ]; then
+    echo "Cloning musl..."
+    git clone https://github.com/richfelker/musl-cross-make.git
+    cd musl-cross-make
+    git pull
+    # TODO: Add musl script
+    cd ..
+fi
+

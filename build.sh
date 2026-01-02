@@ -1,6 +1,17 @@
 TARGET_ARCH="i386"
 DATE=$(date +%d-%b-%Y)
 INSTALL_GRUB=false
+INSTALL_TCC=true
+INSTALL_VIM=false
+INSTALL_NANO=true
+REBUILT_KERNEL=false
+
+export PATH="$HOME/musl-cross-make-output/bin:$PATH"
+export CC=i386-linux-musl-gcc
+export AR=i386-linux-musl-ar
+export RANLIB=i386-linux-musl-ranlib
+export CFLAGS="-march=$TARGET_ARCH -m32 -static -mno-sse -Os -I$HOME/musl-i386-ncurses/include"
+export LDFLAGS="-m32 -static -L$HOME/musl-i386-ncurses/lib"
 
 CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 
@@ -14,6 +25,7 @@ mkdir initramfs/bin
 mkdir diskfs
 mkdir diskfs/bin
 mkdir diskfs/mod
+mkdir diskfs/lib
 mkdir diskfs/grubmod
 echo "Welcome to the disk!" >> diskfs/text.txt
 
@@ -52,11 +64,78 @@ echo "Building busybox..."
 cd busybox
 cp --update=none ../busybox.config .config
 make busybox \
-  CFLAGS="-march=$TARGET_ARCH -m32 -static" \
-  LDFLAGS="-march=$TARGET_ARCH -m32 -static"
+  CC="i386-linux-musl-gcc" \
+  CFLAGS="-march=$TARGET_ARCH -m32 -static -mno-sse" \
+  LDFLAGS="-m32 -static"
 strip busybox
 cp busybox ../diskfs/bin/busybox
 cd ..
+
+if [ "$INSTALL_NANO" = true ]; then
+  echo "Building nano..."
+  cd nano
+  export LIBS="-lncursesw"
+  ./configure \
+    --host=i386-linux-musl \
+    --prefix=$HOME/musl-i386-nano \
+    --with-tlib=ncursesw \
+    --with-features=small \
+    --enable-multibyte \
+    --without-x
+
+  make -j$(nproc)
+  strip src/nano
+  cp src/nano ../diskfs/bin/nano
+  cd ..
+fi
+
+if [ "$INSTALL_VIM" = true ]; then
+  echo "Building vim..."
+  cd vim
+  export LIBS="-lncursesw"
+  ./configure \
+    --host=i386-linux-musl \
+    --prefix=$HOME/musl-i386-vim \
+    --with-tlib=ncursesw \
+    --with-features=small \
+    --enable-multibyte \
+    --without-x
+
+  make -j$(nproc)
+  strip src/vim
+  cp src/vim ../diskfs/bin/vim
+  cd ..
+fi
+
+# TCC build and install
+if [ "$INSTALL_TCC" = true ]; then
+  echo "Setting up TCC..."
+  cd tinycc
+  # Build for host system first for c2str.exe
+  CC="gcc" ./configure
+  make clean
+  make
+  cp c2str.exe ../
+  # Then compile for target
+  ./configure \
+    --enable-static \
+    --cpu=i386 \
+    --cc=i386-linux-musl-gcc \
+    --extra-cflags="-Os -march=i386 -mno-sse -static" \
+    --extra-ldflags="-static" \
+    --prefix=/usr
+  # Build
+  make clean
+  cp ../c2str.exe ./c2str.exe
+  make
+
+  # Strip to reduce size
+  i386-linux-musl-strip tcc
+  #strip tcc
+  cp ~/musl-i386/lib/crt1.o ../diskfs/lib/crt1.o
+  cp tcc ../diskfs/bin/tcc
+  cd ..
+fi
 
 # Grub setup
 if [ "$INSTALL_GRUB" = true ]; then
@@ -114,16 +193,18 @@ echo "Building kernel and ISO..."
 cd linux
 
 # Configure and build the kernel
-cp -u ../isolinux.bin arch/x86/boot/
-cp -u ../kernel.config .config
-# Dunno why this doesn't work :p
-export LOCALVERSION="-pixix_$DATE"
-make CFLAGS="-Os" ARCH=i386 KCFLAGS="-march=$TARGET_ARCH" -j"$(nproc)"
+if [ "$REBUILT_KERNEL" = true ]; then
+  cp -u ../isolinux.bin arch/x86/boot/
+  cp -u ../kernel.config .config
+  # Dunno why this doesn't work :p
+  export LOCALVERSION="-pixix_$DATE"
+  make CFLAGS="-Os" ARCH=i386 KCFLAGS="-march=$TARGET_ARCH" -j"$(nproc)"
+fi
 
 find . -name "*.ko" -exec cp --parents {} ../diskfs/mod/ \;
 
 # Prepare ISO image
-make isoimage ARCH=i386 V=1 -j"$(nproc)" \
+make isoimage ARCH=i386 -j"$(nproc)" \
   KCFLAGS="-march=$TARGET_ARCH" \
   FDARGS="initrd=/init.cpio init=/init" \
   FDINITRD="../init.cpio"
