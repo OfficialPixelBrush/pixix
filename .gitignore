@@ -20,3 +20,4 @@ pixix.iso
 *.exe
 musl-cross-make/
 vim/
+ncurses-6.4.tar.gz

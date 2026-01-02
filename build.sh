@@ -2,8 +2,8 @@ TARGET_ARCH="i386"
 DATE=$(date +%d-%b-%Y)
 INSTALL_GRUB=false
 INSTALL_TCC=true
-INSTALL_VIM=false
-INSTALL_NANO=true
+INSTALL_VIM=true
+INSTALL_NANO=false
 REBUILT_KERNEL=false
 
 export PATH="$HOME/musl-cross-make-output/bin:$PATH"
@@ -74,14 +74,12 @@ cd ..
 if [ "$INSTALL_NANO" = true ]; then
   echo "Building nano..."
   cd nano
-  export LIBS="-lncursesw"
+  export CPPFLAGS="-I$HOME/musl-i386-ncurses/include"
+  export LDFLAGS="-L$HOME/musl-i386-ncurses/lib -static"
+  export LIBS="-lncursesw -ltinfo"
   ./configure \
     --host=i386-linux-musl \
-    --prefix=$HOME/musl-i386-nano \
-    --with-tlib=ncursesw \
-    --with-features=small \
-    --enable-multibyte \
-    --without-x
+    --prefix=$HOME/musl-i386-nano
 
   make -j$(nproc)
   strip src/nano

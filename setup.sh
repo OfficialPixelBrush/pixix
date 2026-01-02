@@ -1,5 +1,5 @@
-GET_NANO=true
-GET_VIM=false
+GET_NANO=false
+GET_VIM=true
 GET_NCURSES=true
 GET_BUSYBOX=true
 GET_GRUB=false
